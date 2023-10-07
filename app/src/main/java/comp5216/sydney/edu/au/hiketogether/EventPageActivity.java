@@ -37,7 +37,7 @@ public class EventPageActivity extends AppCompatActivity {
         ArrayList<Event> eventList = new ArrayList<>();
 
         // 获取所有事件
-        db.collection("Events")
+        db.collection("events")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -66,7 +66,7 @@ public class EventPageActivity extends AppCompatActivity {
                 intent.putExtra("eventName", selectedEvent.getName());
                 intent.putExtra("eventAddress", selectedEvent.getAddress());
                 intent.putExtra("eventTeamSize", selectedEvent.getTeamSize());
-
+                intent.putExtra("eventId",selectedEvent.getId());
                 // 启动EventDetailActivity
                 startActivity(intent);
             }
