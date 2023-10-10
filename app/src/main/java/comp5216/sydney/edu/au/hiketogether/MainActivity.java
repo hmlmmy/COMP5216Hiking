@@ -6,44 +6,42 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
+    FirebaseAuth auth;
+    Button logoutBtn;
+    TextView emailText;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button buttonHome = findViewById(R.id.buttonHome);
-        Button buttonEvent = findViewById(R.id.buttonEvent);
-        Button buttonCreateEvent = findViewById(R.id.buttonCreateEvent);
-        Button buttonProfile = findViewById(R.id.buttonProfile);
+        auth = FirebaseAuth.getInstance();
+        logoutBtn = findViewById(R.id.logout);
+        emailText = findViewById(R.id.email);
+        user = auth.getCurrentUser();
 
-        buttonHome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, MainActivity.class));
-            }
-        });
+        if (user == null) {
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            emailText.setText(user.getEmail());
+        }
 
-        buttonEvent.setOnClickListener(new View.OnClickListener() {
+        logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, EventPageActivity.class));
-            }
-        });
-
-        buttonCreateEvent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, CreateEventActivity.class));
-            }
-        });
-
-        buttonProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            public void onClick(View view) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
