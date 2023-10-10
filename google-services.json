@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "711137131187",
+    "firebase_url": "https://hiking-b1318-default-rtdb.firebaseio.com",
+    "project_id": "hiking-b1318",
+    "storage_bucket": "hiking-b1318.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:711137131187:android:50cdef21ae18f81e100ec6",
+        "android_client_info": {
+          "package_name": "comp5216.sydney.edu.au.hiketogether"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "711137131187-gl4ikr9r2q4ejjb38qt42do1sb55lt64.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnPHgN1PNh3G0q_bEQRULAJnaUiVTZsFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "711137131187-gl4ikr9r2q4ejjb38qt42do1sb55lt64.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

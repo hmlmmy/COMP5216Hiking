@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+
+    <!-- 用户名 -->
+
+    <!-- 用户头像 -->
+    <!--        android:src="@drawable/default_profile_image" &lt;!&ndash; 替换为用户头像资源 &ndash;&gt;-->
+<!--    android:layout_below="@+id/usernameTextView"-->
+<!--    android:layout_centerHorizontal="true"-->
+<!--    android:layout_marginTop="16dp" />-->
+
+    <!-- Headline 模块 -->
+
+    <!-- Content 模块 -->
+
+    <!-- Preference 模块 -->
+
+    <TextView
+        android:id="@+id/usernameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="Username"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
+
+    <LinearLayout
+        android:id="@+id/headlineLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileImageView"
+        android:layout_marginBottom="28dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/contentLayout"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Headline 标题 -->
+        <TextView
+            android:id="@+id/headlineTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Headline"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Mainpage 跳转按钮 -->
+        <Button
+            android:id="@+id/mainpageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mainpage" />
+
+        <!-- Booked Event 跳转按钮 -->
+        <Button
+            android:id="@+id/bookedEventButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Booked Event" />
+
+        <!-- Create Event 跳转按钮 -->
+        <Button
+            android:id="@+id/createEventButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create Event" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/headlineLayout"
+        android:layout_marginBottom="26dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/preferenceLayout"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Content 标题 -->
+        <TextView
+            android:id="@+id/contentTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Content"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Favorite 跳转按钮 -->
+        <Button
+            android:id="@+id/favoriteButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Favorite" />
+
+        <!-- Download 跳转按钮 -->
+        <Button
+            android:id="@+id/downloadButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Download" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/preferenceLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/contentLayout"
+        android:layout_marginBottom="40dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Preference 标题 -->
+        <TextView
+            android:id="@+id/preferenceTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Preference"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Language 跳转按钮 -->
+        <Button
+            android:id="@+id/languageButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Language" />
+
+        <!-- Dark Mode 跳转按钮 -->
+        <Button
+            android:id="@+id/darkModeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dark Mode" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
