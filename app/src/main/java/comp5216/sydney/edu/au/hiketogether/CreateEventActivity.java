@@ -12,14 +12,23 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 public class CreateEventActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 123; // 请求代码可以使用任何非负整数
     Button create_event;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -34,6 +43,21 @@ public class CreateEventActivity extends AppCompatActivity {
             // 请求权限
             requestPermissions();
         }
+
+        //按下create按钮，读取用户输入
+        create_event = findViewById(R.id.createButton);
+        final ViewPager2 viewPager = findViewById(R.id.pager);
+        create_event.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPage = viewPager.getCurrentItem();
+                ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+                String userInput = adapter.getUserInput(currentPage);
+                //这里是用户的输入，可以用来上传
+                Log.i("user input",userInput);
+
+            }
+        });
 
 
     }
@@ -59,6 +83,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -67,8 +92,43 @@ public class CreateEventActivity extends AppCompatActivity {
                 Uri imageUri = data.getData();
                 ImageView targetImageView = findViewById(R.id.create_imageView); // 根据你的需求获取ImageView的实例
                 targetImageView.setImageURI(imageUri);
+                //这里的imageUri是图片的Uri可以用来上传
+                upload_firebase(imageUri);
             }
         }
+    }
+
+    public void upload_firebase(Uri imageUri){
+        // 获取Firebase存储的引用
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+// 创建一个存储路径，其中"images"是存储桶的名称，"your_image.jpg"是要上传的文件名
+        StorageReference imageRef = storageRef.child("images/your_image.jpg");
+
+// 将本地文件（通过imageUri指定）上传到Firebase存储
+        UploadTask uploadTask = imageRef.putFile(imageUri);
+
+// 监听上传任务的完成
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // 上传成功，获取图片的下载URL
+                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri downloadUri) {
+                        // 在这里可以获取到上传后的图片的下载URL（downloadUri）
+                        String imageUrl = downloadUri.toString();
+                        // 将该URL保存到Firebase数据库或在应用中使用
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // 上传失败，处理失败情况
+            }
+        });
+
     }
 
 
