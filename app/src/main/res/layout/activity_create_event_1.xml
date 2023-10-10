@@ -25,25 +25,36 @@
 
     <!-- Create 和 Join 按钮 -->
 
+    <Button
+        android:id="@+id/addImage"
+        android:layout_width="142dp"
+        android:layout_height="74dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="135dp"
+        android:layout_marginTop="449dp"
+        android:text="Choose pic"></Button>
+
     <ImageView
         android:id="@+id/create_imageView"
         android:layout_width="274dp"
         android:layout_height="211dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="91dp"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="89dp"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/create_textView"
-        android:layout_width="281dp"
-        android:layout_height="123dp"
+    <EditText
+        android:id="@+id/user_input_edittext"
+        android:layout_width="364dp"
+        android:layout_height="120dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="42dp"
-        android:layout_marginBottom="159dp"
-        android:text="TextView" />
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="315dp"
+        android:gravity="center"
+        android:hint="Enter your text here" />
 
 
 </RelativeLayout>

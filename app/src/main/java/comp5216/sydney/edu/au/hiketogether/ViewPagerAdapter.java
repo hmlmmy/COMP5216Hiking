@@ -1,9 +1,12 @@
 package comp5216.sydney.edu.au.hiketogether;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -11,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -20,6 +24,17 @@ import java.util.List;
 
 public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.ViewPagerViewHolder>{
     private List<String> create2= new ArrayList<>();
+
+    public interface ImagePickerListener {
+        void onPickImage(ImageView targetImageView, int requestCode);
+    }
+
+    private ImagePickerListener imagePickerListener;
+
+    public void setImagePickerListener(ImagePickerListener listener) {
+        this.imagePickerListener = listener;
+    }
+
 
     public ViewPagerAdapter(){
         create2.add("hello");
@@ -33,7 +48,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewPagerViewHolder holder, int position) {
-        holder.create_text.setText(create2.get(position));
+        return;
     }
 
     @Override
@@ -42,18 +57,31 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     }
 
     class ViewPagerViewHolder extends RecyclerView.ViewHolder{
-        LinearLayout LiLayout;
+        Button addImage;
+        public static final int REQUEST_CODE_PICK_IMAGE = 1;
         RelativeLayout mContainer;
-        TextView create_text;
         ImageView create_image;
 
         public ViewPagerViewHolder(@NonNull View itemView){
             super(itemView);
             mContainer = itemView.findViewById(R.id.container);
-            create_text = itemView.findViewById(R.id.create_textView);
             create_image = itemView.findViewById(R.id.create_imageView);
-            Bitmap bmImg = BitmapFactory.decodeFile("/storage/emulated/0/Android/media/image.jpg");
-            create_image.setImageBitmap(bmImg);
+
+
+            create_image = itemView.findViewById(R.id.create_imageView);
+            addImage = itemView.findViewById(R.id.addImage);
+
+            addImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (imagePickerListener != null) {
+                        imagePickerListener.onPickImage(create_image,REQUEST_CODE_PICK_IMAGE);
+                    }
+                }
+            });
+
         }
+
+
     }
 }
