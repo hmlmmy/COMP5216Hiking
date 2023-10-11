@@ -59,11 +59,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
-
-
 
     public Context context;
     //viewPager滑动效果
@@ -81,8 +77,6 @@ public class CreateEventActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
             }
         });
-
-
     }
 
     @Override
@@ -131,16 +125,6 @@ public class CreateEventActivity extends AppCompatActivity {
         });
 
     }
-
-
-
-
-
-
-
-
-
-
 
     //读取权限
     private boolean checkPermissions() {

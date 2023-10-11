@@ -1,11 +1,13 @@
 package comp5216.sydney.edu.au.hiketogether;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.content.Intent;
@@ -20,22 +22,50 @@ import java.util.ArrayList;
 
 public class EventPageActivity extends AppCompatActivity {
 
+    Button homeBtn;
+    Button eventBtn;
+    Button createEventBtn;
+    Button profileBtn;
     private ListView eventList;
     private EventAdapter eventAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_page); // 设置活动的布局
 
+        homeBtn = findViewById(R.id.buttonHome);
+        eventBtn = findViewById(R.id.buttonEvent);
+        createEventBtn = findViewById(R.id.buttonCreateEvent);
+        profileBtn = findViewById(R.id.buttonProfile);
+
+        homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(EventPageActivity.this, MainActivity.class));
+            }
+        });
+
+        createEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(EventPageActivity.this, CreateEventActivity.class));
+            }
+        });
+
+        profileBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(EventPageActivity.this, ProfileActivity.class));
+            }
+        });
+
         // 初始化 Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         // 获取事件列表视图
         ListView eventListView = findViewById(R.id.eventList);
-
         // 创建一个事件数据列表
         ArrayList<Event> eventList = new ArrayList<>();
-
         // 获取所有事件
         db.collection("events")
                 .get()
@@ -66,7 +96,7 @@ public class EventPageActivity extends AppCompatActivity {
                 intent.putExtra("eventName", selectedEvent.getName());
                 intent.putExtra("eventAddress", selectedEvent.getAddress());
                 intent.putExtra("eventTeamSize", selectedEvent.getTeamSize());
-                intent.putExtra("eventId",selectedEvent.getId());
+                intent.putExtra("eventId", selectedEvent.getId());
                 // 启动EventDetailActivity
                 startActivity(intent);
             }
