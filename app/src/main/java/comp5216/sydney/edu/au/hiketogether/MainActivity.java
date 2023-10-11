@@ -13,9 +13,9 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
+    FirebaseUser user;
     Button logoutBtn;
     TextView emailText;
-    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +23,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
         logoutBtn = findViewById(R.id.logout);
         emailText = findViewById(R.id.email);
-        user = auth.getCurrentUser();
 
         if (user == null) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
