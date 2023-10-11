@@ -48,10 +48,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/profileImageView"
-        android:layout_marginBottom="28dp"
+        android:layout_marginTop="216dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/contentLayout"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <!-- Headline 标题 -->
         <TextView
@@ -64,10 +64,10 @@
 
         <!-- Mainpage 跳转按钮 -->
         <Button
-            android:id="@+id/mainpageButton"
+            android:id="@+id/CreateEventButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Mainpage" />
+            android:text="Create Event" />
 
         <!-- Booked Event 跳转按钮 -->
         <Button
@@ -78,52 +78,17 @@
 
         <!-- Create Event 跳转按钮 -->
         <Button
-            android:id="@+id/createEventButton"
+            android:id="@+id/MyEventButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Event" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/contentLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/headlineLayout"
-        android:layout_marginBottom="26dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/preferenceLayout"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <!-- Content 标题 -->
-        <TextView
-            android:id="@+id/contentTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Content"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <!-- Favorite 跳转按钮 -->
-        <Button
-            android:id="@+id/favoriteButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Favorite" />
-
-        <!-- Download 跳转按钮 -->
-        <Button
-            android:id="@+id/downloadButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Download" />
+            android:text="My Events" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/preferenceLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/contentLayout"
-        android:layout_marginBottom="40dp"
+        android:layout_marginBottom="248dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -138,11 +103,6 @@
             android:textStyle="bold" />
 
         <!-- Language 跳转按钮 -->
-        <Button
-            android:id="@+id/languageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Language" />
 
         <!-- Dark Mode 跳转按钮 -->
         <Button
@@ -150,6 +110,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Dark Mode" />
+
     </LinearLayout>
 
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="648dp"
+        android:text="logout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
