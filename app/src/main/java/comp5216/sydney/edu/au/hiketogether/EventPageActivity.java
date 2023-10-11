@@ -8,42 +8,69 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-
+import android.content.Intent;
 import android.os.Bundle;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class EventPageActivity extends AppCompatActivity {
 
-
+    private ListView eventList;
+    private EventAdapter eventAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_page); // 设置活动的布局
 
+        // 初始化 Firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
         // 获取事件列表视图
         ListView eventListView = findViewById(R.id.eventList);
 
-        //
-        String[] eventListItems = {
-                "Event 1: Description 1",
-                "Event 2: Description 2",
-                "Event 3: Description 3",
+        // 创建一个事件数据列表
+        ArrayList<Event> eventList = new ArrayList<>();
 
-        };
+        // 获取所有事件
+        db.collection("events")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        // 遍历查询结果并添加到事件列表
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            Event event = document.toObject(Event.class);
+                            eventList.add(event);
+                        }
 
-        // 创建适配器以将事件数据绑定到ListView
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, eventListItems);
-
-        // 将适配器设置到ListView
-        eventListView.setAdapter(adapter);
+                        // 创建适配器并将事件列表绑定到 ListView
+                        eventAdapter = new EventAdapter(EventPageActivity.this, eventList);
+                        eventListView.setAdapter(eventAdapter);
+                    }
+                });
 
         // 为ListView的项添加点击事件监听器
         eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //
-                String selectedItem = (String) parent.getItemAtPosition(position);
-                Toast.makeText(EventPageActivity.this, "点击了：" + selectedItem, Toast.LENGTH_SHORT).show();
+                // 获取选定的事件
+                Event selectedEvent = eventList.get(position);
+
+                // 创建一个Intent来启动EventDetailActivity
+                Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
+                intent.putExtra("eventName", selectedEvent.getName());
+                intent.putExtra("eventAddress", selectedEvent.getAddress());
+                intent.putExtra("eventTeamSize", selectedEvent.getTeamSize());
+                intent.putExtra("eventId",selectedEvent.getId());
+                // 启动EventDetailActivity
+                startActivity(intent);
             }
         });
+
     }
 }
