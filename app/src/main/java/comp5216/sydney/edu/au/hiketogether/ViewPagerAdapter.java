@@ -1,10 +1,7 @@
 package comp5216.sydney.edu.au.hiketogether;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,22 +9,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,22 +29,40 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     private List<String> create2= new ArrayList<>();
     private List<String> memberlist= new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FirebaseAuth auth;
+    FirebaseUser user;
+    String userEmail;
+
 
     public void getUserInfo(){
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        userEmail = user.getEmail();
+
+        //创建的EventList
+        List<String> CreatedEvents = new ArrayList<>();
+        //参加的EventList
+        List<String> JoinedEvents = new ArrayList<>();
+
+
+        //添加用户自己
+        addMember(userEmail);
         //default路径
-        CollectionReference cities = db.collection("cities");
+        CollectionReference userInfo = db.collection("User_profile_V1");
 
         Map<String, Object> data1 = new HashMap<>();
-        //单条数据
-        data1.put("name", "San Francisco");
-//        data1.put("state", "CA");
-//        data1.put("country", "USA");
-//        data1.put("capital", false);
-//        data1.put("population", 860000);
-//        data1.put("regions", Arrays.asList("west_coast", "norcal"));
+
+        //单个用户的数据
+        data1.put("Email", userEmail);
+        data1.put("Created Events", CreatedEvents);
+        data1.put("Joined Events", JoinedEvents);
+
+
+        // TODO: 11/10/2023 用户的名字，暂时没有，以后再考虑加不加
+        //data1.put("Name",user.getDisplayName());
 
         //放user email进去
-        cities.document("SF").set(data1);
+        userInfo.document(userEmail).set(data1);
     }
 
 
@@ -82,12 +93,14 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     @NonNull
     @Override
     public ViewPagerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_create_event_1, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_create_event, parent, false);
         list = view.findViewById(R.id.create_lst); // 初始化 list
         adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, memberlist); // 初始化适配器
         list.setAdapter(adapter); // 设置适配器
-        addMember("12345");
+
         getUserInfo();
+
+
         return new ViewPagerViewHolder(view, viewType);
     }
 

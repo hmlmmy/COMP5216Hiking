@@ -1,4 +1,5 @@
 package comp5216.sydney.edu.au.hiketogether;
+import static android.content.ContentValues.TAG;
 import static comp5216.sydney.edu.au.hiketogether.ViewPagerAdapter.ViewPagerViewHolder.REQUEST_CODE_PICK_IMAGE;
 
 import android.content.Context;
@@ -21,20 +22,43 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.util.ArrayList;
+import java.util.UUID;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class CreateEventActivity extends AppCompatActivity {
 
     private static final int PERMISSION_REQUEST_CODE = 123; // 请求代码可以使用任何非负整数
     Button create_event;
-
+    FirebaseAuth auth;
+    FirebaseUser user;
+    String userEmail;
+    String Description;
+    String EventID;
+    String CreatorEmail;
+    String ImageUrl;
+    List<String> MemberEmail = new ArrayList<>();
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event_main);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
 
         // 检查权限状态
         if (checkPermissions()) {
@@ -53,19 +77,69 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int currentPage = viewPager.getCurrentItem();
                 ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
-                String userInput = adapter.getUserInput(currentPage);
-                //这里是用户的输入，可以用来上传
-                Log.i("user input",userInput);
+                //event介绍
+                Description = adapter.getUserInput(currentPage);
+                //eventID
+                EventID = UUID.randomUUID().toString();
+                //创建者Email
+                CreatorEmail = user.getEmail();
+                //ImageUrl  这个是下载的URL
+                uploadEvent(ImageUrl,EventID,CreatorEmail,Description,MemberEmail);
+
+
 
             }
         });
+    }
 
+    public void uploadEvent(String ImageUrl, String EventID, String CreatorEmail,String Description, List<String> MemberEmail){
+        CollectionReference EventInfo = db.collection("Event List");
 
+        Map<String, Object> data1 = new HashMap<>();
+
+        //单个用户的数据
+        data1.put("Creator Email",CreatorEmail);
+        data1.put("Image",ImageUrl);
+        data1.put("Description",Description);
+        data1.put("Member Email",MemberEmail);
+
+        //放EventID进去
+        EventInfo.document(EventID).set(data1);
+
+        //把EventID放到对应User的数据集中去
+        CollectionReference UserInfo = db.collection("User_profile_V1");
+
+        UserInfo.document(CreatorEmail)
+                .get().addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // 获取文档中的数据
+                        Map<String, Object> data = documentSnapshot.getData();
+                        if (data != null) {
+                            // 检索字符串列表
+                            ArrayList<String> stringList = (ArrayList<String>) data.get("Created Events");
+                            stringList.add(EventID);
+                            // 将新字符串添加到列表中
+                            UserInfo.document(CreatorEmail).update("Created Events",stringList)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w(TAG, "Error updating document", e);
+                                        }
+                                    });
+
+                        }
+                    }
+                });
     }
 
 
 
-    public Context context;
     //viewPager滑动效果
     private void setupViewPager() {
         ViewPager2 viewPager = findViewById(R.id.pager);
@@ -81,8 +155,6 @@ public class CreateEventActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), requestCode);
             }
         });
-
-
     }
 
     @Override
@@ -120,6 +192,7 @@ public class CreateEventActivity extends AppCompatActivity {
                         // 在这里可以获取到上传后的图片的下载URL（downloadUri）
                         String imageUrl = downloadUri.toString();
                         // 将该URL保存到Firebase数据库或在应用中使用
+                        ImageUrl = imageUrl;
                     }
                 });
             }
@@ -131,16 +204,6 @@ public class CreateEventActivity extends AppCompatActivity {
         });
 
     }
-
-
-
-
-
-
-
-
-
-
 
     //读取权限
     private boolean checkPermissions() {
@@ -170,4 +233,5 @@ public class CreateEventActivity extends AppCompatActivity {
             }
         }
     }
+
 }
