@@ -41,5 +41,4 @@
             android:name=".EventPageActivity"
             android:exported="false" />
     </application>
-
 </manifest>
