@@ -1,9 +1,11 @@
 package comp5216.sydney.edu.au.hiketogether;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -13,12 +15,16 @@ import android.widget.Toast;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class EventPageActivity extends AppCompatActivity {
 
@@ -75,6 +81,10 @@ public class EventPageActivity extends AppCompatActivity {
                         // 遍历查询结果并添加到事件列表
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             Event event = document.toObject(Event.class);
+                            // 获取每个事件的文档ID
+                            String eventId = document.getId();
+                            event.setId(eventId);
+                            Log.i("event id",eventId);
                             eventList.add(event);
                         }
 
@@ -91,16 +101,45 @@ public class EventPageActivity extends AppCompatActivity {
                 // 获取选定的事件
                 Event selectedEvent = eventList.get(position);
 
-                // 创建一个Intent来启动EventDetailActivity
-                Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
-                intent.putExtra("eventName", selectedEvent.getName());
-                intent.putExtra("eventAddress", selectedEvent.getAddress());
-                intent.putExtra("eventTeamSize", selectedEvent.getTeamSize());
-                intent.putExtra("eventId", selectedEvent.getId());
-                // 启动EventDetailActivity
-                startActivity(intent);
+                // 获取选定事件的文档ID
+                String eventId = selectedEvent.getId();
+                Log.i("event id",eventId);
+                // 创建一个Firestore引用
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                // 获取事件文档
+                db.collection("events")
+                        .document(eventId)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    // 获取文档数据
+                                    Map<String, Object> eventMap = documentSnapshot.getData();
+
+                                    // 创建一个Intent来启动EventDetailActivity
+                                    Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
+
+                                    // 将事件文档数据传递给EventDetailActivity
+                                    intent.putExtra("eventData", (Serializable) eventMap);
+
+                                    // 启动EventDetailActivity
+                                    startActivity(intent);
+                                } else {
+                                    // 处理文档不存在的情况
+                                    Log.d("Document", "Document does not exist");
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // 处理获取文档失败的情况
+                                Log.w("Document", "Error getting document", e);
+                            }
+                        });
             }
         });
-
     }
 }
