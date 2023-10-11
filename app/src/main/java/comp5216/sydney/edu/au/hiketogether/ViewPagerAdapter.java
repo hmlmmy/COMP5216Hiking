@@ -44,11 +44,10 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         //参加的EventList
         List<String> JoinedEvents = new ArrayList<>();
 
-
         //添加用户自己
         addMember(userEmail);
         //default路径
-        CollectionReference userInfo = db.collection("User_profile_V1");
+        CollectionReference userInfo = db.collection("User_profile");
 
         Map<String, Object> data1 = new HashMap<>();
 
@@ -56,7 +55,6 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         data1.put("Email", userEmail);
         data1.put("Created Events", CreatedEvents);
         data1.put("Joined Events", JoinedEvents);
-
 
         // TODO: 11/10/2023 用户的名字，暂时没有，以后再考虑加不加
         //data1.put("Name",user.getDisplayName());

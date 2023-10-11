@@ -43,7 +43,6 @@ public class CreateEventActivity extends AppCompatActivity {
     Button create_event;
     FirebaseAuth auth;
     FirebaseUser user;
-    String userEmail;
     String Description;
     String EventID;
     String CreatorEmail;
@@ -107,7 +106,7 @@ public class CreateEventActivity extends AppCompatActivity {
         EventInfo.document(EventID).set(data1);
 
         //把EventID放到对应User的数据集中去
-        CollectionReference UserInfo = db.collection("User_profile_V1");
+        CollectionReference UserInfo = db.collection("User_profile");
 
         UserInfo.document(CreatorEmail)
                 .get().addOnSuccessListener(documentSnapshot -> {
