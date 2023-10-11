@@ -84,7 +84,7 @@ public class EventPageActivity extends AppCompatActivity {
                             // 获取每个事件的文档ID
                             String eventId = document.getId();
                             event.setId(eventId);
-                            Log.i("event id",eventId);
+                            //Log.i("event id",eventId);
                             eventList.add(event);
                         }
 
@@ -106,39 +106,46 @@ public class EventPageActivity extends AppCompatActivity {
                 Log.i("event id",eventId);
                 // 创建一个Firestore引用
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
+                // 创建一个Intent来启动EventDetailActivity
+                Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
 
-                // 获取事件文档
-                db.collection("events")
-                        .document(eventId)
-                        .get()
-                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                            @Override
-                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                if (documentSnapshot.exists()) {
-                                    // 获取文档数据
-                                    Map<String, Object> eventMap = documentSnapshot.getData();
+                // 将事件文档数据传递给EventDetailActivity
+                intent.putExtra("eventId", eventId);
 
-                                    // 创建一个Intent来启动EventDetailActivity
-                                    Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
-
-                                    // 将事件文档数据传递给EventDetailActivity
-                                    intent.putExtra("eventData", (Serializable) eventMap);
-
-                                    // 启动EventDetailActivity
-                                    startActivity(intent);
-                                } else {
-                                    // 处理文档不存在的情况
-                                    Log.d("Document", "Document does not exist");
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // 处理获取文档失败的情况
-                                Log.w("Document", "Error getting document", e);
-                            }
-                        });
+                // 启动EventDetailActivity
+                startActivity(intent);
+//                // 获取事件文档
+//                db.collection("events")
+//                        .document(eventId)
+//                        .get()
+//                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                            @Override
+//                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                                if (documentSnapshot.exists()) {
+//                                    // 获取文档数据
+//                                    Map<String, Object> eventMap = documentSnapshot.getData();
+//
+//                                    // 创建一个Intent来启动EventDetailActivity
+//                                    Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
+//
+//                                    // 将事件文档数据传递给EventDetailActivity
+//                                    intent.putExtra("eventData", (Serializable) eventMap);
+//
+//                                    // 启动EventDetailActivity
+//                                    startActivity(intent);
+//                                } else {
+//                                    // 处理文档不存在的情况
+//                                    Log.d("Document", "Document does not exist");
+//                                }
+//                            }
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//                                // 处理获取文档失败的情况
+//                                Log.w("Document", "Error getting document", e);
+//                            }
+//                        });
             }
         });
     }
