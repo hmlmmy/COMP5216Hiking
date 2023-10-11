@@ -1,6 +1,7 @@
 package comp5216.sydney.edu.au.hiketogether;
 import static comp5216.sydney.edu.au.hiketogether.ViewPagerAdapter.ViewPagerViewHolder.REQUEST_CODE_PICK_IMAGE;
 
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
@@ -64,7 +65,7 @@ public class CreateEventActivity extends AppCompatActivity {
 
 
 
-
+    public Context context;
     //viewPager滑动效果
     private void setupViewPager() {
         ViewPager2 viewPager = findViewById(R.id.pager);
@@ -102,7 +103,7 @@ public class CreateEventActivity extends AppCompatActivity {
         // 获取Firebase存储的引用
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-// 创建一个存储路径，其中"images"是存储桶的名称，"your_image.jpg"是要上传的文件名
+// 创建一个存储路径，其中"images"是存储桶的名称，"eventID.jpg"是要上传的文件名
         StorageReference imageRef = storageRef.child("images/your_image.jpg");
 
 // 将本地文件（通过imageUri指定）上传到Firebase存储
