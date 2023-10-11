@@ -15,13 +15,13 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseUser user;
     Button logoutBtn;
+    Button editBtn;
     TextView emailText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-
-
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -36,6 +36,12 @@ public class ProfileActivity extends AppCompatActivity {
             emailText.setText(user.getEmail());
         }
 
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //startActivity(new Intent(ProfileActivity.this, EditProfile.class));
+            }
+        });
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,4 +52,4 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
-    }
+}
