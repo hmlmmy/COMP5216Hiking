@@ -1,16 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EventPageActivity">
-
-
-
-
-
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- 头部 -->
     <!-- 左侧标题 -->
     <RelativeLayout
@@ -20,29 +13,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-
-
-
-        <!--            android:src="@drawable/ic_search" />-->
-
     </RelativeLayout>
 
-    <!-- Event列表 -->
     <ListView
         android:id="@+id/eventList"
-        android:layout_width="272dp"
-        android:layout_height="463dp"
+        android:layout_width="405dp"
+        android:layout_height="678dp"
         android:layout_below="@id/header"
-        android:layout_marginStart="58dp"
-        android:layout_marginTop="116dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="96dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header" />
-
-    <!--        android:menu="@menu/bottom_navigation_menu"-->
-
-    <!-- 右侧搜索按钮 -->
-
-    <!-- 底部导航栏 -->
 
     <TextView
         android:id="@+id/title"
@@ -55,24 +36,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
-
-    <FrameLayout
-        android:id="@+id/fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="101dp"
+        android:layout_height="42dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="36dp"
+        android:text="Search"
+        app:layout_constraintStart_toEndOf="@+id/title"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Bottom Navigation View -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_navigation_menu" /> <!-- Assuming you have a menu for the BottomNavigationView -->
-
 </androidx.constraintlayout.widget.ConstraintLayout>

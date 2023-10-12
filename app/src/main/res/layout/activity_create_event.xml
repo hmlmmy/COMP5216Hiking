@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/container"
-    android:background="@color/black"
+    android:background="#808080"
     tools:context=".CreateEventActivity">
 
     <!-- 页面标题 -->
