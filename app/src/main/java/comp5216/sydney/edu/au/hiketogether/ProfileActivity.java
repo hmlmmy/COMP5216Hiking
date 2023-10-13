@@ -27,6 +27,8 @@ public class ProfileActivity extends AppCompatActivity {
         user = auth.getCurrentUser();
         logoutBtn = findViewById(R.id.logout);
         emailText = findViewById(R.id.usernameTextView);
+        editBtn = findViewById(R.id.editProfile);
+
 
         if (user == null) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -39,7 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(ProfileActivity.this, EditProfile.class));
+                startActivity(new Intent(ProfileActivity.this, EditProfile.class));
             }
         });
         logoutBtn.setOnClickListener(new View.OnClickListener() {
