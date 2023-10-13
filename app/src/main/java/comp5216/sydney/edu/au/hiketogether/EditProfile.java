@@ -11,12 +11,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
+import android.widget.ImageView;
 public class EditProfile extends AppCompatActivity {
 
     // 定义变量存储UI组件
     private EditText usernameEditText, emailEditText, phoneEditText;
     private Button updateButton;
+    private Button backButton;
     // Firestore 数据库引用
     private FirebaseFirestore db;
     // 用来存储查询到的文档ID
@@ -35,6 +39,7 @@ public class EditProfile extends AppCompatActivity {
         emailEditText = findViewById(R.id.emailEditText);
         phoneEditText = findViewById(R.id.phoneEditText);
         updateButton = findViewById(R.id.updateButton);
+        backButton = findViewById(R.id.backButton); // 添加返回按钮的初始化
 
         // 获取从其他Activity传递来的email
         String userEmail = getIntent().getStringExtra("email");
@@ -47,6 +52,15 @@ public class EditProfile extends AppCompatActivity {
             public void onClick(View v) {
                 // 当按钮被点击时，执行更新操作
                 updateProfile();
+            }
+        });
+
+        // 设置返回按钮的点击监听
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 点击时返回ProfileActivity
+                finish();
             }
         });
     }
@@ -88,6 +102,7 @@ public class EditProfile extends AppCompatActivity {
         ).addOnSuccessListener(aVoid -> {
             // 更新成功时显示成功消息
             Toast.makeText(EditProfile.this, "Profile updated.", Toast.LENGTH_SHORT).show();
+            finish();
         }).addOnFailureListener(e -> {
             // 更新失败时显示错误消息
             Toast.makeText(EditProfile.this, "Error updating profile.", Toast.LENGTH_SHORT).show();
