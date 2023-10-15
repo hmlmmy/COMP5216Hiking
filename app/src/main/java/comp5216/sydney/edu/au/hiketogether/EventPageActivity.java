@@ -32,6 +32,7 @@ public class EventPageActivity extends AppCompatActivity {
     Button eventBtn;
     Button createEventBtn;
     Button profileBtn;
+    Button searchBtn;
     private ListView eventList;
     private EventAdapter eventAdapter;
 
@@ -44,6 +45,7 @@ public class EventPageActivity extends AppCompatActivity {
         eventBtn = findViewById(R.id.buttonEvent);
         createEventBtn = findViewById(R.id.buttonCreateEvent);
         profileBtn = findViewById(R.id.buttonProfile);
+        searchBtn = findViewById(R.id.searchButton);
 
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +53,8 @@ public class EventPageActivity extends AppCompatActivity {
                 startActivity(new Intent(EventPageActivity.this, MainActivity.class));
             }
         });
+
+
 
         createEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +67,14 @@ public class EventPageActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(EventPageActivity.this, ProfileActivity.class));
+            }
+        });
+
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EventPageActivity.this, SearchActivity.class);
+                startActivity(intent);
             }
         });
 
