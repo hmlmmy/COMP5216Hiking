@@ -83,6 +83,40 @@ public class SearchActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    
+    // 执行搜索操作
+    private void performSearch() {
+        String query = searchEditText.getText().toString().trim();
 
+        // 如果搜索内容不为空且历史记录中不存在，则保存到搜索历史
+        if (!query.isEmpty() && !searchHistory.contains(query)) {
+            searchHistory.add(0, query);
+            historyAdapter.notifyDataSetChanged();
+            saveSearchHistory();
+        }
+
+        // 使用Firebase Firestore来搜索匹配的事件
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("events")
+                .whereGreaterThanOrEqualTo("eventName", query.toLowerCase())
+                .whereLessThanOrEqualTo("eventName", query.toLowerCase() + "\uf8ff")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        ArrayList<String> matchedEventNames = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            matchedEventNames.add(document.getString("eventName"));
+                        }
+
+                        Intent intent = new Intent(this, EventPageActivity.class);
+                        if (matchedEventNames.isEmpty()) {
+                            intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");
+                        } else {
+                            intent.putStringArrayListExtra("MATCHED_EVENTS", matchedEventNames);
+                        }
+                        startActivity(intent);
+                    } else {
+                        Toast.makeText(this, "Error occurred while searching.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 }
