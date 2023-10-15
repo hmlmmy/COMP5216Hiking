@@ -35,6 +35,7 @@ public class EventPageActivity extends AppCompatActivity {
     Button searchBtn;
     private ListView eventList;
     private EventAdapter eventAdapter;
+    private ListView eventListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +79,29 @@ public class EventPageActivity extends AppCompatActivity {
             }
         });
 
+        // 检查是否从 SearchActivity 接收到了数据
+        Intent intent = getIntent();
+        ArrayList<String> matchedEventNames = intent.getStringArrayListExtra("MATCHED_EVENTS");
+        if (matchedEventNames != null && !matchedEventNames.isEmpty()) {
+            // 显示匹配的事件名
+            ArrayAdapter<String> matchedEventsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, matchedEventNames);
+            eventList.setAdapter(matchedEventsAdapter);
+        } else {
+            String errorMessage = intent.getStringExtra("ERROR_MESSAGE");
+            if (errorMessage != null) {
+                // 显示错误消息，例如使用Toast
+                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+            } else {
+                // 如果没有从 SearchActivity 接收到数据，就加载所有的事件
+                loadAllEvents();
+            }
+        }
+
         // 初始化 Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // 获取事件列表视图
-        ListView eventListView = findViewById(R.id.eventList);
+//        ListView eventListView = findViewById(R.id.eventList);
+        eventListView = findViewById(R.id.eventList);
         // 创建一个事件数据列表
         ArrayList<Event> eventList = new ArrayList<>();
         // 获取所有事件
@@ -160,5 +180,44 @@ public class EventPageActivity extends AppCompatActivity {
 //                        });
             }
         });
+    }
+
+    private void loadAllEvents() {
+        // 获取Firestore数据库实例
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // 创建一个事件数据列表，这将用于存储从Firestore获取的事件数据
+        ArrayList<Event> eventList = new ArrayList<>();
+
+        // 使用Firestore的查询来获取'events'集合中的所有文档（即所有事件）
+        db.collection("events")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        // 当查询成功时，遍历查询结果
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            // 将每个文档转化为'Event'对象
+                            Event event = document.toObject(Event.class);
+                            // 获取并设置该事件的ID（文档ID）
+                            String eventId = document.getId();
+                            event.setId(eventId);
+                            // 将事件对象添加到事件列表中
+                            eventList.add(event);
+                        }
+
+                        // 创建适配器并绑定到ListView，这样可以在UI上显示事件数据
+                        eventAdapter = new EventAdapter(EventPageActivity.this, eventList);
+                        eventListView.setAdapter(eventAdapter);
+                    }
+                })
+                // 添加一个失败监听器以处理查询失败的情况
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // 打印错误信息
+                        Log.w("Document", "Error getting document", e);
+                    }
+                });
     }
 }
