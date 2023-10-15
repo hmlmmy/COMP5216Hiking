@@ -43,6 +43,7 @@ public class EditProfile extends AppCompatActivity {
 
         // 获取从其他Activity传递来的email
         String userEmail = getIntent().getStringExtra("email");
+
         // 根据email获取用户数据
         fetchData(userEmail);
 
@@ -68,8 +69,8 @@ public class EditProfile extends AppCompatActivity {
     // 根据提供的email从Firestore中获取用户数据
     private void fetchData(String email) {
         // 在"User Profile"集合中查询与给定email匹配的文档
-        db.collection("userProfiles")
-                .whereEqualTo("email", email)
+        db.collection("User_profile")
+                .whereEqualTo("Email", email)
                 .get()
                 .addOnCompleteListener(task -> {
                     // 如果查询成功并且结果非空
@@ -78,14 +79,14 @@ public class EditProfile extends AppCompatActivity {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             // 设置UI组件的文本为从文档中获取到的值
                             usernameEditText.setText(document.getString("name"));
-                            emailEditText.setText(document.getString("email"));
+                            emailEditText.setText(document.getString("Email"));
                             phoneEditText.setText(document.getString("phone"));
                             // 存储当前文档的ID，以便后续更新操作
                             documentId = document.getId();
                         }
                     } else {
                         // 如果查询失败，显示错误消息
-                        Toast.makeText(EditProfile.this, "Error fetching data.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditProfile.this, "File does not exist.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -93,15 +94,20 @@ public class EditProfile extends AppCompatActivity {
     // 更新用户数据
     private void updateProfile() {
         // 获取指向Firestore中特定文档
-        DocumentReference userRef = db.collection("userProfiles").document(documentId);
+        DocumentReference userRef = db.collection("User_profile").document(documentId);
         // 更新该文档的字段为新输入的值
         userRef.update(
                 "name", usernameEditText.getText().toString(),
-                "email", emailEditText.getText().toString(),
+                "Email", emailEditText.getText().toString(),
                 "phone", phoneEditText.getText().toString()
         ).addOnSuccessListener(aVoid -> {
             // 更新成功时显示成功消息
             Toast.makeText(EditProfile.this, "Profile updated.", Toast.LENGTH_SHORT).show();
+            Intent resultIntent = new Intent();
+            resultIntent.putExtra("updatedName", usernameEditText.getText().toString());
+            resultIntent.putExtra("updatedEmail", emailEditText.getText().toString());
+            resultIntent.putExtra("updatedPhone", phoneEditText.getText().toString());
+            setResult(RESULT_OK, resultIntent);
             finish();
         }).addOnFailureListener(e -> {
             // 更新失败时显示错误消息

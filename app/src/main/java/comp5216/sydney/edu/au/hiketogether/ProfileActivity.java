@@ -41,7 +41,8 @@ public class ProfileActivity extends AppCompatActivity {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ProfileActivity.this, EditProfile.class));
+                Intent intent = new Intent(ProfileActivity.this, EditProfile.class);
+                startActivityForResult(intent, 1);
             }
         });
         logoutBtn.setOnClickListener(new View.OnClickListener() {
