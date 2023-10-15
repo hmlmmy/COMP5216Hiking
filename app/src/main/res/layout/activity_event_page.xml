@@ -13,48 +13,14 @@
 
     <!-- 头部 -->
     <!-- 左侧标题 -->
-    <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-
-
-        <!--            android:src="@drawable/ic_search" />-->
-
-    </RelativeLayout>
 
     <!-- Event列表 -->
-    <ListView
-        android:id="@+id/eventList"
-        android:layout_width="272dp"
-        android:layout_height="463dp"
-        android:layout_below="@id/header"
-        android:layout_marginStart="58dp"
-        android:layout_marginTop="116dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
 
     <!--        android:menu="@menu/bottom_navigation_menu"-->
 
     <!-- 右侧搜索按钮 -->
 
     <!-- 底部导航栏 -->
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="134dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="40dp"
-        android:text="Event Page"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
 
 
     <FrameLayout

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -32,9 +33,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/profileImageView"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="324dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/contentLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <!-- Headline 标题 -->
@@ -73,9 +74,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/headlineLayout"
-        android:layout_marginBottom="26dp"
+        android:layout_marginBottom="160dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/preferenceLayout"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <!-- Content 标题 -->
@@ -102,37 +103,4 @@
             android:text="Download" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/preferenceLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/contentLayout"
-        android:layout_marginBottom="40dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <!-- Preference 标题 -->
-        <TextView
-            android:id="@+id/preferenceTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Preference"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <!-- Language 跳转按钮 -->
-        <Button
-            android:id="@+id/languageButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Language" />
-
-        <!-- Dark Mode 跳转按钮 -->
-        <Button
-            android:id="@+id/darkModeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dark Mode" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

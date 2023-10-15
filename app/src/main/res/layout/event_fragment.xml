@@ -6,6 +6,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <!-- 头部 -->
     <!-- 左侧标题 -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="134dp"
+        android:layout_height="38dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="40dp"
+        android:text="Event Page"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -25,24 +36,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header" />
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="134dp"
-        android:layout_height="38dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="40dp"
-        android:text="Event Page"
-        android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/searchButton"
         android:layout_width="101dp"
         android:layout_height="42dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginStart="268dp"
+        android:layout_marginTop="40dp"
         android:text="Search"
-        app:layout_constraintStart_toEndOf="@+id/title"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
