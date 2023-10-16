@@ -49,12 +49,12 @@ public class EditProfile extends AppCompatActivity {
 
         // 获取当前已登录用户的email
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        String userEmail;
+        String userID;
         if (currentUser != null) {
-            userEmail = currentUser.getEmail();
+            userID = currentUser.getUid();
 
             // 根据email获取用户数据
-            fetchData(userEmail);
+            fetchData(userID);
         } else {
             Toast.makeText(EditProfile.this, "Login first!", Toast.LENGTH_SHORT).show();
         }
@@ -79,9 +79,9 @@ public class EditProfile extends AppCompatActivity {
         });
     }
 
-    private void fetchData(String email) {
+    private void fetchData(String userID) {
         // 通过文档 ID 获取文档
-        DocumentReference docRef = db.collection("User_profile").document(email);
+        DocumentReference docRef = db.collection("User_profile").document(userID);
 
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -95,7 +95,7 @@ public class EditProfile extends AppCompatActivity {
                     documentId = document.getId();
                 } else {
                     // 如果查询失败或者没有匹配的用户，创建并上传一个新的用户文档
-                    createUserProfile(email);
+                    createUserProfile(userID);
                 }
             } else {
                 Toast.makeText(EditProfile.this, "Error fetching data.", Toast.LENGTH_SHORT).show();
@@ -103,23 +103,23 @@ public class EditProfile extends AppCompatActivity {
         });
     }
 
-
     // 创建并上传一个新的用户文档
-    private void createUserProfile(String email) {
-        DocumentReference newUserRef = db.collection("User_profile").document(email);
+    private void createUserProfile(String userID) {
+        DocumentReference newUserRef = db.collection("User_profile").document(userID);
         Map<String, Object> userData = new HashMap<>();
         userData.put("name", "");
-        userData.put("Email", email);
+        userData.put("Email", userID);
         userData.put("phone", "");
 
         newUserRef.set(userData).addOnSuccessListener(aVoid -> {
             Toast.makeText(EditProfile.this, "New profile created.", Toast.LENGTH_SHORT).show();
             // 存储新文档的ID，以便后续更新操作
-            documentId = email;
+            documentId = userID;
         }).addOnFailureListener(e -> {
             Toast.makeText(EditProfile.this, "Error creating profile.", Toast.LENGTH_SHORT).show();
         });
     }
+
     // 更新用户数据
     private void updateProfile() {
         // 获取指向Firestore中特定文档
