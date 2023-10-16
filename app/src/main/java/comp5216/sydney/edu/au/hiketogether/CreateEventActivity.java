@@ -43,12 +43,10 @@ public class CreateEventActivity extends AppCompatActivity {
     Button create_event;
     FirebaseAuth auth;
     FirebaseUser user;
-    String Address;
+    String Description;
     String EventID;
     String CreatorEmail;
     String ImageUrl;
-    String PhoneNumber;
-    String UserName;
     List<String> MemberEmail = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
@@ -79,15 +77,13 @@ public class CreateEventActivity extends AppCompatActivity {
                 int currentPage = viewPager.getCurrentItem();
                 ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
                 //event介绍
-                Address = adapter.getUserInput(currentPage);
+                Description = adapter.getUserInput(currentPage);
                 //eventID
                 EventID = UUID.randomUUID().toString();
                 //创建者Email
                 CreatorEmail = user.getEmail();
-                PhoneNumber = "000000";
-                UserName = "Admin";
                 //ImageUrl  这个是下载的URL
-                uploadEvent(PhoneNumber,UserName,ImageUrl,EventID,CreatorEmail,Address,MemberEmail);
+                uploadEvent(ImageUrl,EventID,CreatorEmail,Description,MemberEmail);
 
 
 
@@ -95,15 +91,15 @@ public class CreateEventActivity extends AppCompatActivity {
         });
     }
 
-    public void uploadEvent(String PhoneNumber,String UserName,String ImageUrl, String EventID, String CreatorEmail,String Address, List<String> MemberEmail){
+    public void uploadEvent(String ImageUrl, String EventID, String CreatorEmail,String Description, List<String> MemberEmail){
         CollectionReference EventInfo = db.collection("Event List");
 
         Map<String, Object> data1 = new HashMap<>();
-        Map<String, Object> data2 = new HashMap<>();
+
         //单个用户的数据
         data1.put("Creator Email",CreatorEmail);
         data1.put("Image",ImageUrl);
-        data1.put("Address",Address);
+        data1.put("Description",Description);
         data1.put("Member Email",MemberEmail);
 
         //放EventID进去
