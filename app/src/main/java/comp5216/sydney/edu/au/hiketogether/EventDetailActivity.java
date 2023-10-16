@@ -43,8 +43,6 @@ public class EventDetailActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        Log.i("userID",userEmail);
-
         // 获取从 EventPageActivity 传递的事件 ID
         String eventId = getIntent().getStringExtra("eventId");
         String eventName = getIntent().getStringExtra("eventName");

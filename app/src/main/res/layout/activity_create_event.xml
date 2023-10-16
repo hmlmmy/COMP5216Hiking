@@ -33,7 +33,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="135dp"
-        android:layout_marginTop="449dp"
+        android:layout_marginTop="500dp"
         android:text="Choose pic"></Button>
 
     <ImageView
@@ -49,13 +49,52 @@
     <EditText
         android:id="@+id/user_input_edittext"
         android:layout_width="364dp"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="24dp"
         android:layout_marginTop="315dp"
         android:gravity="center"
-        android:hint="Enter your text here" />
+        android:hint="Enter event name" />
+
+
+
+    <EditText
+        android:id="@+id/user_input_edittext2"
+        android:layout_width="365dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_input_edittext"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="363dp"
+        android:gravity="center"
+        android:hint="Enter event description" />
+
+    <EditText
+        android:id="@+id/user_input_edittext3"
+        android:layout_width="364dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="410dp"
+        android:gravity="center"
+        android:hint="Enter event address" />
+
+    <EditText
+        android:id="@+id/user_input_edittext4"
+        android:layout_width="365dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/user_input_edittext"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="450dp"
+        android:gravity="center"
+        android:hint="Enter Difficulty" />
+
+
 
     <ListView
         android:id="@+id/create_lst"

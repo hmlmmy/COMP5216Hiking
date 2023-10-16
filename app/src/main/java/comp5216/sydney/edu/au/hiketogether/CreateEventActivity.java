@@ -47,6 +47,9 @@ public class CreateEventActivity extends AppCompatActivity {
     String EventID;
     String CreatorEmail;
     String ImageUrl;
+    String EventName;
+    String Address;
+    String Difficulty;
     List<String> MemberEmail = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
@@ -77,29 +80,35 @@ public class CreateEventActivity extends AppCompatActivity {
                 int currentPage = viewPager.getCurrentItem();
                 ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
                 //event介绍
-                Description = adapter.getUserInput(currentPage);
+                EventName = adapter.getUserInput(0);
+                Description = adapter.getUserInput(1);
+                Address = adapter.getUserInput(2);
+                Difficulty = adapter.getUserInput(3);
                 //eventID
                 EventID = UUID.randomUUID().toString();
                 //创建者Email
                 CreatorEmail = user.getEmail();
+
+
+
                 //ImageUrl  这个是下载的URL
-                uploadEvent(ImageUrl,EventID,CreatorEmail,Description,MemberEmail);
-
-
-
+                uploadEvent(EventName,ImageUrl,EventID,CreatorEmail,MemberEmail,Description,Address,Difficulty);
             }
         });
     }
 
-    public void uploadEvent(String ImageUrl, String EventID, String CreatorEmail,String Description, List<String> MemberEmail){
+    public void uploadEvent(String EventName,String ImageUrl, String EventID, String CreatorEmail, List<String> MemberEmail,String Description,String Address, String Difficulty){
         CollectionReference EventInfo = db.collection("Event List");
 
         Map<String, Object> data1 = new HashMap<>();
 
-        //单个用户的数据
+        //单个event的数据
+        data1.put("Event Name",EventName);
         data1.put("Creator Email",CreatorEmail);
-        data1.put("Image",ImageUrl);
+        data1.put("Address",Address);
+        data1.put("Difficulty",Difficulty);
         data1.put("Description",Description);
+        data1.put("Image",ImageUrl);
         data1.put("Member Email",MemberEmail);
 
         //放EventID进去
@@ -144,6 +153,8 @@ public class CreateEventActivity extends AppCompatActivity {
         ViewPager2 viewPager = findViewById(R.id.pager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter();
         viewPager.setAdapter(viewPagerAdapter);
+
+
 
         viewPagerAdapter.setImagePickerListener(new ViewPagerAdapter.ImagePickerListener() {
             @Override

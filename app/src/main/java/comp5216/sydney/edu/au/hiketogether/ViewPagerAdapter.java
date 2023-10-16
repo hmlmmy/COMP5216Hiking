@@ -78,12 +78,15 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     public ViewPagerAdapter(){
         create2.add("");
         create2.add("");
+        create2.add("");
+        create2.add("");
     }
 
     private ArrayAdapter<String> adapter; // 添加适配器变量
     ListView list;
     public void addMember(String memberID) {
         String newItem = memberID; // 假设 "New Member" 是要添加的新元素
+        memberlist.clear();
         memberlist.add(newItem);
         adapter.notifyDataSetChanged(); // 更新适配器
     }
@@ -115,10 +118,15 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
             holder.userInputEditText.setText(userInput);
             holder.list.setVisibility(View.GONE);
             holder.create_image.setVisibility(View.VISIBLE); // 显示ImageView
+
         } else if (position == 1) {
             // 第二页的内容
             String userInput = create2.get(position);
             holder.userInputEditText.setText(userInput);
+
+            holder.userInput2.setVisibility(View.GONE);
+            holder.userInput3.setVisibility(View.GONE);
+            holder.userInput4.setVisibility(View.GONE);
 
             holder.list.setVisibility(View.VISIBLE);
             holder.create_image.setVisibility(View.GONE); // 隐藏ImageView
@@ -141,6 +149,9 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         RelativeLayout mContainer;
         ImageView create_image;
         EditText userInputEditText;
+        EditText userInput2;
+        EditText userInput3;
+        EditText userInput4;
         ListView list;
         int position; // 添加一个变量来保存ViewHolder的位置
         public ViewPagerViewHolder(@NonNull View itemView, int position) {
@@ -151,7 +162,9 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
             create_image = itemView.findViewById(R.id.create_imageView);
             addImage = itemView.findViewById(R.id.addImage);
             list = itemView.findViewById(R.id.create_lst);
-
+            userInput2 = itemView.findViewById(R.id.user_input_edittext2);
+            userInput3 = itemView.findViewById(R.id.user_input_edittext3);
+            userInput4 = itemView.findViewById(R.id.user_input_edittext4);
             userInputEditText.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -161,7 +174,61 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     // 在文本变化时的回调，保存用户输入
-                    create2.set(position, s.toString());
+                    create2.set(0, s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    // 在文本变化之后的回调
+                }
+            });
+
+            userInput2.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // 在文本变化之前的回调
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // 在文本变化时的回调，保存用户输入
+                    create2.set(1, s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    // 在文本变化之后的回调
+                }
+            });
+
+            userInput3.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // 在文本变化之前的回调
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // 在文本变化时的回调，保存用户输入
+                    create2.set(2, s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    // 在文本变化之后的回调
+                }
+            });
+
+            userInput4.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // 在文本变化之前的回调
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // 在文本变化时的回调，保存用户输入
+                    create2.set(3, s.toString());
                 }
 
                 @Override
@@ -178,6 +245,8 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
                     }
                 }
             });
+
+
         }
 
 
