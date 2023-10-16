@@ -2,7 +2,9 @@ package comp5216.sydney.edu.au.hiketogether;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +18,16 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseUser user;
     Button logoutBtn;
     Button editBtn;
-    TextView emailText;
+    Button darkmodeBtn;
+    Button createEventBtn;
+    Button bookedEventBtn;
+    Button myEventBtn;
+    TextView Username;
 
+    TextView userEmail;
+    TextView PhoneNum;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,8 +36,14 @@ public class ProfileActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         logoutBtn = findViewById(R.id.logout);
-        emailText = findViewById(R.id.usernameTextView);
+        Username = findViewById(R.id.usernameTextView);
         editBtn = findViewById(R.id.editProfile);
+        userEmail = findViewById(R.id.emailtextView);
+        PhoneNum = findViewById(R.id.phonetextView);
+        darkmodeBtn = findViewById(R.id.darkModeButton);
+        createEventBtn = findViewById(R.id.CreateEventButton);
+        bookedEventBtn = findViewById(R.id.bookedEventButton);
+        myEventBtn = findViewById(R.id.MyEventButton);
 
 
         if (user == null) {
@@ -35,7 +51,9 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            emailText.setText(user.getEmail());
+            Username.setText(user.getEmail());
+            userEmail.setText(user.getEmail());
+            PhoneNum.setText(user.getPhoneNumber());
         }
 
         editBtn.setOnClickListener(new View.OnClickListener() {
@@ -54,5 +72,65 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        createEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //打开CreateEvent页面
+                Intent intent = new Intent(ProfileActivity.this,CreateEventActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        bookedEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //打开Search页面
+                Intent intent = new Intent(ProfileActivity.this,SearchActivity.class);
+                //添加已经book的信息的mark
+                intent.putExtra("key", "value");
+                startActivity(intent);
+            }
+        });
+
+        myEventBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //打开CreateEvent页面
+                Intent intent = new Intent(ProfileActivity.this,CreateEventActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        darkmodeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 修改整个页面的背景颜色
+                View rootView = getWindow().getDecorView().getRootView();
+                rootView.setBackgroundColor(getResources().getColor(R.color.darkmode_color));
+
+            }
+        });
+
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1) {
+            if (resultCode == RESULT_OK) {
+                String updatedName = data.getStringExtra("updatedName");
+                String updatedEmail = data.getStringExtra("updatedEmail");
+                String updatedPhone = data.getStringExtra("updatedPhone");
+
+                Username.setText(updatedName);
+                userEmail.setText(updatedEmail);
+                PhoneNum.setText(updatedPhone);
+
+            }
+
+        }
+    }
+
+
 }

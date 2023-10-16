@@ -14,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -79,28 +80,29 @@ public class EditProfile extends AppCompatActivity {
     }
 
     private void fetchData(String email) {
-        // 在"User Profile"集合中查询与给定email匹配的文档
-        db.collection("User_profile")
-                .whereEqualTo("Email", email)
-                .get()
-                .addOnCompleteListener(task -> {
-                    // 如果查询成功并且结果非空
-                    if (task.isSuccessful() && !task.getResult().isEmpty()) {
-                        // 遍历查询结果中的文档
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            // 设置UI组件的文本为从文档中获取到的值
-                            usernameEditText.setText(document.getString("name"));
-                            emailEditText.setText(document.getString("Email"));
-                            phoneEditText.setText(document.getString("phone"));
-                            // 存储当前文档的ID，以便后续更新操作
-                            documentId = document.getId();
-                        }
-                    } else {
-                        // 如果查询失败或者没有匹配的用户，创建并上传一个新的用户文档
-                        createUserProfile(email);
-                    }
-                });
+        // 通过文档 ID 获取文档
+        DocumentReference docRef = db.collection("User_profile").document(email);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // 设置UI组件的文本为从文档中获取到的值
+                    usernameEditText.setText(document.getString("name"));
+                    emailEditText.setText(document.getString("Email"));
+                    phoneEditText.setText(document.getString("phone"));
+                    // 存储当前文档的ID，以便后续更新操作
+                    documentId = document.getId();
+                } else {
+                    // 如果查询失败或者没有匹配的用户，创建并上传一个新的用户文档
+                    createUserProfile(email);
+                }
+            } else {
+                Toast.makeText(EditProfile.this, "Error fetching data.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     // 创建并上传一个新的用户文档
     private void createUserProfile(String email) {
