@@ -3,6 +3,8 @@ package comp5216.sydney.edu.au.hiketogether;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +26,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import com.squareup.picasso.Picasso;
 
 
 public class EventDetailActivity extends AppCompatActivity {
@@ -43,13 +47,8 @@ public class EventDetailActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
-        Log.i("userID",userEmail);
+        //Log.i("userID",userEmail);
 
-        // 获取从 EventPageActivity 传递的事件 ID
-        String eventId = getIntent().getStringExtra("eventId");
-        String eventName = getIntent().getStringExtra("eventName");
-        Log.i("eventId",eventId);
-        Log.i("eventName",eventName);
         //Get user email
         userEmail = user.getEmail();
         // Initialize Firestore
@@ -59,20 +58,19 @@ public class EventDetailActivity extends AppCompatActivity {
         nameTextView = findViewById(R.id.eventNameTextView);
         addressTextView = findViewById(R.id.addressTextView);
         teamSizeTextView = findViewById(R.id.teamSizeTextView);
-        //eventImageView = findViewById(R.id.eventImageView);
+        eventImageView = findViewById(R.id.eventImage);
 
         Button joinButton = findViewById(R.id.joinButton);
         Button quitButton = findViewById(R.id.quitButton);
 
-        db.collection("events").whereEqualTo("name", eventName)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        if (!queryDocumentSnapshots.isEmpty()) {
-                            // 获取查询结果中的第一个文档
-                            DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+        String eventId = getIntent().getStringExtra("eventId");
 
+        db.collection("events").document(eventId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot document) {
+                        if (document.exists()) {
                             // 从文档中获取事件信息
                             String eventName = document.getString("name");
                             String eventAddress = document.getString("address");
@@ -86,12 +84,16 @@ public class EventDetailActivity extends AppCompatActivity {
 
                             // 使用 Picasso 或其他库加载事件图片
                             if (eventPicture != null && !eventPicture.isEmpty()) {
-                                //Picasso.get().load(eventPicture).into(eventImageView);
+                                // 将图片地址字符串转换为 Uri
+                                Uri imageUri = Uri.parse(eventPicture);
+
+                                // 使用 Picasso 或其他库加载图片到 ImageView
+                                Picasso.get().load(imageUri).into(eventImageView);
                             }
                         } else {
                             // 没有匹配的文档，处理错误
                             // 这里可以显示错误消息或执行其他操作
-                            Log.i("search error", "No matching documents");
+                            Log.i("search error", "No matching document for ID: " + eventId);
                         }
                     }
                 })
@@ -100,7 +102,7 @@ public class EventDetailActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         // 查询失败，处理错误
                         // 这里可以显示错误消息或执行其他操作
-                        Log.i("search error", "Query failed: " + e.getMessage());
+                        Log.e("search error", "Query failed: " + e.getMessage());
                     }
                 });
 
@@ -173,8 +175,7 @@ public class EventDetailActivity extends AppCompatActivity {
             }
         });
 
-
-// 设置按钮的点击事件监听器
+        // 设置按钮的点击事件监听器
         quitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -240,6 +241,5 @@ public class EventDetailActivity extends AppCompatActivity {
                         });
             }
         });
-
     }
 }
