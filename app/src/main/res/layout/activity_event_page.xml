@@ -7,10 +7,6 @@
     tools:context=".EventPageActivity">
 
 
-
-
-
-
     <!-- 头部 -->
     <!-- 左侧标题 -->
     <RelativeLayout
@@ -19,8 +15,6 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-
 
 
         <!--            android:src="@drawable/ic_search" />-->
