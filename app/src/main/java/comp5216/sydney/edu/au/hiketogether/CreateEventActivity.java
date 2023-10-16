@@ -82,6 +82,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 EventID = UUID.randomUUID().toString();
                 //创建者Email
                 CreatorEmail = user.getEmail();
+
                 //ImageUrl  这个是下载的URL
                 uploadEvent(ImageUrl,EventID,CreatorEmail,Description,MemberEmail);
 

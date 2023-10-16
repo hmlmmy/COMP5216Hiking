@@ -33,7 +33,7 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="135dp"
-        android:layout_marginTop="449dp"
+        android:layout_marginTop="520dp"
         android:text="Choose pic"></Button>
 
     <ImageView
@@ -47,15 +47,37 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <EditText
-        android:id="@+id/user_input_edittext"
+        android:id="@+id/name"
         android:layout_width="364dp"
-        android:layout_height="120dp"
+        android:layout_height="60dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="315dp"
+        android:layout_marginTop="335dp"
         android:gravity="center"
-        android:hint="Enter your text here" />
+        android:hint="Name" />
+
+    <EditText
+        android:id="@+id/address"
+        android:layout_width="364dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="395dp"
+        android:gravity="center"
+        android:hint="Address" />
+
+    <EditText
+        android:id="@+id/description"
+        android:layout_width="364dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="455dp"
+        android:gravity="center"
+        android:hint="Description" />
 
     <ListView
         android:id="@+id/create_lst"

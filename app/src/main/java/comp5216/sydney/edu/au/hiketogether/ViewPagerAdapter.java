@@ -1,7 +1,6 @@
 package comp5216.sydney.edu.au.hiketogether;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,17 +111,17 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         if (position == 0) {
             // 第一页的内容
             String userInput = create2.get(position);
-            holder.userInputEditText.setText(userInput);
+            holder.eventName.setText(userInput);
             holder.list.setVisibility(View.GONE);
             holder.create_image.setVisibility(View.VISIBLE); // 显示ImageView
         } else if (position == 1) {
             // 第二页的内容
             String userInput = create2.get(position);
-            holder.userInputEditText.setText(userInput);
+            holder.eventName.setText(userInput);
 
             holder.list.setVisibility(View.VISIBLE);
             holder.create_image.setVisibility(View.GONE); // 隐藏ImageView
-            holder.userInputEditText.setVisibility(View.GONE);
+            holder.eventName.setVisibility(View.GONE);
             holder.addImage.setVisibility(View.GONE);
 
         }
@@ -140,19 +139,23 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         public static final int REQUEST_CODE_PICK_IMAGE = 1;
         RelativeLayout mContainer;
         ImageView create_image;
-        EditText userInputEditText;
+        EditText eventName;
+        EditText eventAddress;
+        EditText eventDescription;
         ListView list;
         int position; // 添加一个变量来保存ViewHolder的位置
         public ViewPagerViewHolder(@NonNull View itemView, int position) {
             super(itemView);
             this.position = position; // 保存ViewHolder的位置
-            userInputEditText = itemView.findViewById(R.id.user_input_edittext);
+            eventName = itemView.findViewById(R.id.name);
+            eventAddress = itemView.findViewById(R.id.address);
+            eventDescription = itemView.findViewById(R.id.description);
             mContainer = itemView.findViewById(R.id.container);
             create_image = itemView.findViewById(R.id.create_imageView);
             addImage = itemView.findViewById(R.id.addImage);
             list = itemView.findViewById(R.id.create_lst);
 
-            userInputEditText.addTextChangedListener(new TextWatcher() {
+            eventName.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                     // 在文本变化之前的回调
