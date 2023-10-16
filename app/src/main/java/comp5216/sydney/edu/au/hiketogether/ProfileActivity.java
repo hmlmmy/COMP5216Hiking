@@ -26,8 +26,8 @@ public class ProfileActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         logoutBtn = findViewById(R.id.logout);
-        emailText = findViewById(R.id.usernameTextView);
         editBtn = findViewById(R.id.editProfile);
+        emailText = findViewById(R.id.usernameTextView);
 
 
         if (user == null) {
