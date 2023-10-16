@@ -11,9 +11,11 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -84,6 +86,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     ListView list;
     public void addMember(String memberID) {
         String newItem = memberID; // 假设 "New Member" 是要添加的新元素
+        memberlist.clear();
         memberlist.add(newItem);
         adapter.notifyDataSetChanged(); // 更新适配器
     }
@@ -105,6 +108,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     public String getUserInput(int position) {
         return create2.get(position);
     }
+
 
 
     @Override

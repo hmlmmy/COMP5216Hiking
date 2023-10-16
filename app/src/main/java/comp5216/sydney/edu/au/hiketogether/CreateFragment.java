@@ -97,7 +97,7 @@ public class CreateFragment extends Fragment {
         // TODO: 16/10/2023 Event name?
         data1.put("Creator Email",CreatorEmail);
         data1.put("Image",ImageUrl);
-        data1.put("Address",Address);
+        data1.put("Description",Address);
         data1.put("Team size",1);
         data1.put("Member Email",MemberEmail);
 
