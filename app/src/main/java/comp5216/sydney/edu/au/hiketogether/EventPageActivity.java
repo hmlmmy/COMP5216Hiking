@@ -9,12 +9,10 @@ import android.widget.Button;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class EventPageActivity extends AppCompatActivity {
-
     Button homeBtn;
     Button eventBtn;
     Button createEventBtn;
     Button profileBtn;
-
     Fragment Event;
     Fragment Create;
     Fragment Profile;
