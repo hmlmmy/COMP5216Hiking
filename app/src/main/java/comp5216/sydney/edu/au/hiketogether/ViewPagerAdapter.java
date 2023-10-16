@@ -32,7 +32,11 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
     FirebaseUser user;
     String userEmail;
 
+    private ViewPagerViewHolder viewPagerViewHolder;
 
+    public void setViewPagerViewHolder(ViewPagerViewHolder holder) {
+        this.viewPagerViewHolder = holder;
+    }
     public void getUserInfo(){
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -94,7 +98,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         list = view.findViewById(R.id.create_lst); // 初始化 list
         adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, memberlist); // 初始化适配器
         list.setAdapter(adapter); // 设置适配器
-
+        ViewPagerViewHolder holder = new ViewPagerViewHolder(view, viewType);
         getUserInfo();
 
 

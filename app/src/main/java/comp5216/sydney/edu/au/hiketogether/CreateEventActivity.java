@@ -15,8 +15,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -49,6 +52,8 @@ public class CreateEventActivity extends AppCompatActivity {
     String ImageUrl;
     List<String> MemberEmail = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    ViewPagerAdapter.ViewPagerViewHolder viewPagerViewHolder;
+    ViewPagerAdapter viewPagerAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -68,6 +73,11 @@ public class CreateEventActivity extends AppCompatActivity {
             requestPermissions();
         }
 
+        // 初始化 viewPagerViewHolder
+        //viewPagerViewHolder = new ViewPagerAdapter.ViewPagerViewHolder(findViewById(R.id.container), 0);
+        // 将 viewPagerViewHolder 传递给 ViewPagerAdapter
+        //viewPagerAdapter.setViewPagerViewHolder(viewPagerViewHolder);
+
         //按下create按钮，读取用户输入
         create_event = findViewById(R.id.createButton);
         final ViewPager2 viewPager = findViewById(R.id.pager);
@@ -76,15 +86,24 @@ public class CreateEventActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int currentPage = viewPager.getCurrentItem();
                 ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
+
+//                // 获取用户输入
+//                String name = viewPagerViewHolder.eventName.getText().toString();
+//                String address = viewPagerViewHolder.eventAddress.getText().toString();
+//                String description = viewPagerViewHolder.eventDescription.getText().toString();
+                // 获取用户输入的内容
+                String name = ((EditText) findViewById(R.id.name)).getText().toString();
+                String address = ((EditText) findViewById(R.id.address)).getText().toString();
+                String description = ((EditText) findViewById(R.id.description)).getText().toString();
                 //event介绍
-                Description = adapter.getUserInput(currentPage);
+                //Description = adapter.getUserInput(currentPage);
                 //eventID
                 EventID = UUID.randomUUID().toString();
                 //创建者Email
                 CreatorEmail = user.getEmail();
 
                 //ImageUrl  这个是下载的URL
-                uploadEvent(ImageUrl,EventID,CreatorEmail,Description,MemberEmail);
+                uploadEvent(ImageUrl,EventID,CreatorEmail,Description,MemberEmail,name,address,description);
 
 
 
@@ -92,7 +111,8 @@ public class CreateEventActivity extends AppCompatActivity {
         });
     }
 
-    public void uploadEvent(String ImageUrl, String EventID, String CreatorEmail,String Description, List<String> MemberEmail){
+    public void uploadEvent(String ImageUrl, String EventID, String CreatorEmail,String Description, List<String> MemberEmail,
+                            String name, String address, String description){
         CollectionReference EventInfo = db.collection("Event List");
 
         Map<String, Object> data1 = new HashMap<>();
@@ -102,6 +122,9 @@ public class CreateEventActivity extends AppCompatActivity {
         data1.put("Image",ImageUrl);
         data1.put("Description",Description);
         data1.put("Member Email",MemberEmail);
+        data1.put("Event Name", name); // 上传用户输入的名称
+        data1.put("Address", address); // 上传用户输入的地址
+        data1.put("Description", description); // 上传用户输入的描述
 
         //放EventID进去
         EventInfo.document(EventID).set(data1);
@@ -175,13 +198,13 @@ public class CreateEventActivity extends AppCompatActivity {
         // 获取Firebase存储的引用
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-// 创建一个存储路径，其中"images"是存储桶的名称，"eventID.jpg"是要上传的文件名
+        // 创建一个存储路径，其中"images"是存储桶的名称，"eventID.jpg"是要上传的文件名
         StorageReference imageRef = storageRef.child("images/your_image.jpg");
 
-// 将本地文件（通过imageUri指定）上传到Firebase存储
+        // 将本地文件（通过imageUri指定）上传到Firebase存储
         UploadTask uploadTask = imageRef.putFile(imageUri);
 
-// 监听上传任务的完成
+        // 监听上传任务的完成
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {

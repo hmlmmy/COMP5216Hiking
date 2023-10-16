@@ -85,7 +85,7 @@ public class EventPageActivity extends AppCompatActivity {
         if (matchedEventNames != null && !matchedEventNames.isEmpty()) {
             // 显示匹配的事件名
             ArrayAdapter<String> matchedEventsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, matchedEventNames);
-            eventList.setAdapter(matchedEventsAdapter);
+            //eventList.setAdapter(matchedEventsAdapter);
         } else {
             String errorMessage = intent.getStringExtra("ERROR_MESSAGE");
             if (errorMessage != null) {
@@ -105,7 +105,7 @@ public class EventPageActivity extends AppCompatActivity {
         // 创建一个事件数据列表
         ArrayList<Event> eventList = new ArrayList<>();
         // 获取所有事件
-        db.collection("events")
+        db.collection("Event List")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
