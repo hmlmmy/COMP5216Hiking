@@ -15,6 +15,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,11 +31,19 @@ public class EventDetailActivity extends AppCompatActivity {
     private TextView addressTextView;
     private TextView teamSizeTextView;
     private ImageView eventImageView;
+    FirebaseAuth auth;
+    FirebaseUser user;
+    String userEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+
+        Log.i("userID",userEmail);
 
         // 获取从 EventPageActivity 传递的事件 ID
         String eventId = getIntent().getStringExtra("eventId");
@@ -41,7 +51,7 @@ public class EventDetailActivity extends AppCompatActivity {
         Log.i("eventId",eventId);
         Log.i("eventName",eventName);
         //Get user email
-        String userEmail = "user1@gmail.com";
+        userEmail = user.getEmail();
         // Initialize Firestore
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
