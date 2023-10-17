@@ -102,16 +102,18 @@ public class SearchActivity extends AppCompatActivity {
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        ArrayList<String> matchedEventNames = new ArrayList<>();
+                        ArrayList<Event> matchedEvents = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            matchedEventNames.add(document.getString("EventName"));
+                            Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                            matchedEvents.add(event);
                         }
 
+
                         Intent intent = new Intent(this, EventPageActivity.class);
-                        if (matchedEventNames.isEmpty()) {
+                        if (matchedEvents.isEmpty()) {
                             intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");
                         } else {
-                            intent.putStringArrayListExtra("MATCHED_EVENTS", matchedEventNames);
+                            intent.putExtra("MATCHED_EVENTS", matchedEvents);
                         }
                         startActivity(intent);
                     } else {

@@ -41,7 +41,13 @@ public class EventAdapter extends BaseAdapter {
 
         // 获取事件对象
         Event event = eventList.get(position);
-        Log.d("event name", event.getName());
+
+        if (event != null && event.getName() != null) {
+            Log.d("event name", event.getName());
+        } else {
+            Log.d("event name", "event or event name is null");
+        }
+
 
         // 获取列表项视图中的 TextView，并设置事件属性
         TextView eventNameTextView = rowView.findViewById(R.id.name);

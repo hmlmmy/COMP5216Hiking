@@ -33,9 +33,9 @@ public class EventPageActivity extends AppCompatActivity {
     Button createEventBtn;
     Button profileBtn;
     Button searchBtn;
-    private ListView eventList;
-    private EventAdapter eventAdapter;
-    private ListView eventListView;
+    ListView eventList;
+    EventAdapter eventAdapter;
+    ListView eventListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +47,7 @@ public class EventPageActivity extends AppCompatActivity {
         createEventBtn = findViewById(R.id.buttonCreateEvent);
         profileBtn = findViewById(R.id.buttonProfile);
         searchBtn = findViewById(R.id.searchButton);
+        eventListView = findViewById(R.id.eventList);
 
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,11 +79,11 @@ public class EventPageActivity extends AppCompatActivity {
 
         // 检查是否从 SearchActivity 接收到了数据
         Intent intent = getIntent();
-        ArrayList<String> matchedEventNames = intent.getStringArrayListExtra("MATCHED_EVENTS");
-        if (matchedEventNames != null && !matchedEventNames.isEmpty()) {
-            // 显示匹配的事件名
-            ArrayAdapter<String> matchedEventsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, matchedEventNames);
-            //eventList.setAdapter(matchedEventsAdapter);
+        ArrayList<Event> matchedEvents = (ArrayList<Event>) intent.getSerializableExtra("MATCHED_EVENTS");
+        if (matchedEvents != null && !matchedEvents.isEmpty()) {
+            // 显示匹配的活动
+            eventAdapter = new EventAdapter(EventPageActivity.this, matchedEvents);
+            eventListView.setAdapter(eventAdapter);
         } else {
             String errorMessage = intent.getStringExtra("ERROR_MESSAGE");
             if (errorMessage != null) {
@@ -98,7 +99,7 @@ public class EventPageActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // 获取事件列表视图
 //        ListView eventListView = findViewById(R.id.eventList);
-        eventListView = findViewById(R.id.eventList);
+
         // 创建一个事件数据列表
         ArrayList<Event> eventList = new ArrayList<>();
         // 获取所有事件
@@ -187,7 +188,7 @@ public class EventPageActivity extends AppCompatActivity {
         ArrayList<Event> eventList = new ArrayList<>();
 
         // 使用Firestore的查询来获取'events'集合中的所有文档（即所有事件）
-        db.collection("events")
+        db.collection("Event List")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override

@@ -1,9 +1,15 @@
 package comp5216.sydney.edu.au.hiketogether;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-public class Event {
+public class Event implements Serializable {
     private String id;
     private String creatorID;
     private String name;
@@ -40,7 +46,7 @@ public class Event {
         this.id = id;
     }
 
-    public String getCreatorID() { return id; }
+    public String getCreatorID() { return creatorID; }
     public void setCreatorID(String creatorID) {
         this.creatorID = creatorID;
     }
@@ -100,5 +106,6 @@ public class Event {
     public void setImageURLs(ArrayList<String> imageURLs) {
         this.imageURLs = imageURLs;
     }
+
 }
 
