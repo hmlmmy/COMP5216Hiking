@@ -97,8 +97,8 @@ public class SearchActivity extends AppCompatActivity {
         // 使用Firebase Firestore来搜索匹配的事件
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("Event List")
-                .whereGreaterThanOrEqualTo("Event Name", query.toLowerCase())
-                .whereLessThanOrEqualTo("Event Name", query.toLowerCase() + "\uf8ff")
+                .whereGreaterThanOrEqualTo("name", query.toLowerCase())
+                .whereLessThanOrEqualTo("name", query.toLowerCase() + "\uf8ff")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {

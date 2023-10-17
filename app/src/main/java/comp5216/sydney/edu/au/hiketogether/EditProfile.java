@@ -6,6 +6,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import android.content.Intent;
+
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -81,7 +83,7 @@ public class EditProfile extends AppCompatActivity {
 
     private void fetchData(String userID) {
         // 通过文档 ID 获取文档
-        DocumentReference docRef = db.collection("User_profile").document(userID);
+        DocumentReference docRef = db.collection("User Profile").document(userID);
 
         docRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -89,7 +91,7 @@ public class EditProfile extends AppCompatActivity {
                 if (document.exists()) {
                     // 设置UI组件的文本为从文档中获取到的值
                     usernameEditText.setText(document.getString("name"));
-                    emailEditText.setText(document.getString("Email"));
+                    emailEditText.setText(document.getString("email"));
                     phoneEditText.setText(document.getString("phone"));
                     // 存储当前文档的ID，以便后续更新操作
                     documentId = document.getId();
@@ -105,11 +107,13 @@ public class EditProfile extends AppCompatActivity {
 
     // 创建并上传一个新的用户文档
     private void createUserProfile(String userID) {
-        DocumentReference newUserRef = db.collection("User_profile").document(userID);
+        DocumentReference newUserRef = db.collection("User Profile").document(userID);
         Map<String, Object> userData = new HashMap<>();
-        userData.put("name", "");
-        userData.put("Email", userID);
+        userData.put("name", "Mr anonymous");
+        userData.put("email", "");
         userData.put("phone", "");
+        userData.put("joinedEvents", new ArrayList<String>());
+        userData.put("createdEvents", new ArrayList<String>());
 
         newUserRef.set(userData).addOnSuccessListener(aVoid -> {
             Toast.makeText(EditProfile.this, "New profile created.", Toast.LENGTH_SHORT).show();
@@ -123,11 +127,11 @@ public class EditProfile extends AppCompatActivity {
     // 更新用户数据
     private void updateProfile() {
         // 获取指向Firestore中特定文档
-        DocumentReference userRef = db.collection("User_profile").document(documentId);
+        DocumentReference userRef = db.collection("User Profile").document(documentId);
         // 更新该文档的字段为新输入的值
         userRef.update(
                 "name", usernameEditText.getText().toString(),
-                "Email", emailEditText.getText().toString(),
+                "email", emailEditText.getText().toString(),
                 "phone", phoneEditText.getText().toString()
         ).addOnSuccessListener(aVoid -> {
             // 更新成功时显示成功消息

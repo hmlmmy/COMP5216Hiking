@@ -21,22 +21,33 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText emailEditText, passwordEditText;
+    EditText emailEditText, passwordEditText, usernameEditTExt, phoneEditText;
     Button registerBtn;
     FirebaseAuth mAuth;
     ProgressBar progressBar;
     TextView toLogin;
-
+    FirebaseFirestore db;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
         emailEditText = findViewById(R.id.email);
         passwordEditText = findViewById(R.id.password);
+        usernameEditTExt = findViewById(R.id.username);
+        phoneEditText = findViewById(R.id.phone);
+
         registerBtn = findViewById(R.id.register);
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         progressBar = findViewById(R.id.progressBar);
         toLogin = findViewById(R.id.toLogin);
 
@@ -53,9 +64,11 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 progressBar.setVisibility(View.VISIBLE);
-                String email, password;
+                String email, password, username, phone;
                 email = emailEditText.getText().toString();
                 password = emailEditText.getText().toString();
+                username = usernameEditTExt.getText().toString();
+                phone = phoneEditText.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(RegisterActivity.this, "Please enter email", Toast.LENGTH_SHORT).show();
@@ -75,6 +88,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     Toast.makeText(RegisterActivity.this, "Registration successful.",
                                             Toast.LENGTH_SHORT).show();
+                                    FirebaseUser user = mAuth.getCurrentUser();
+                                    assert user != null;
+                                    String userID = user.getUid();
+                                    createUserProfile(userID, username, email, phone);
                                     Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -87,6 +104,22 @@ public class RegisterActivity extends AppCompatActivity {
                             }
                         });
             }
+        });
+    }
+
+    private void createUserProfile(String userID, String username, String email, String phone) {
+        DocumentReference newUserRef = db.collection("User Profile").document(userID);
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("name", username);
+        userData.put("email", email);
+        userData.put("phone", phone);
+        userData.put("joinedEvents", new ArrayList<String>());
+        userData.put("createdEvents", new ArrayList<String>());
+
+        newUserRef.set(userData).addOnSuccessListener(aVoid -> {
+            Toast.makeText(RegisterActivity.this, "New profile created.", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(RegisterActivity.this, "Error creating profile.", Toast.LENGTH_SHORT).show();
         });
     }
 }
