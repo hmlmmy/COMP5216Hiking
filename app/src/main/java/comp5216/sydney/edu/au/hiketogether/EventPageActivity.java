@@ -55,8 +55,6 @@ public class EventPageActivity extends AppCompatActivity {
             }
         });
 
-
-
         createEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,8 +72,7 @@ public class EventPageActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EventPageActivity.this, SearchActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(EventPageActivity.this, SearchActivity.class));
             }
         });
 

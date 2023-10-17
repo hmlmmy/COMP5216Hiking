@@ -104,7 +104,7 @@ public class SearchActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         ArrayList<String> matchedEventNames = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            matchedEventNames.add(document.getString("Event Name"));
+                            matchedEventNames.add(document.getString("EventName"));
                         }
 
                         Intent intent = new Intent(this, EventPageActivity.class);

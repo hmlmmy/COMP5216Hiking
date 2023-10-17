@@ -1,6 +1,7 @@
 package comp5216.sydney.edu.au.hiketogether;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,17 +41,19 @@ public class EventAdapter extends BaseAdapter {
 
         // 获取事件对象
         Event event = eventList.get(position);
+        Log.d("event name", event.getName());
 
         // 获取列表项视图中的 TextView，并设置事件属性
-        TextView eventNameTextView = rowView.findViewById(R.id.eventNameTextView);
-        TextView eventAddressTextView = rowView.findViewById(R.id.addressTextView);
-        TextView teamSizeTextView = rowView.findViewById(R.id.teamSizeTextView);
+        TextView eventNameTextView = rowView.findViewById(R.id.name);
+        TextView eventAddressTextView = rowView.findViewById(R.id.address);
+        TextView eventDescriptionTextView = rowView.findViewById(R.id.description);
 
         eventNameTextView.setText(event.getName());
         eventAddressTextView.setText(event.getAddress());
-        teamSizeTextView.setText(String.valueOf(event.getTeamSize()));
+        eventDescriptionTextView.setText(event.getDescription());
 
         return rowView;
     }
+
 }
 
