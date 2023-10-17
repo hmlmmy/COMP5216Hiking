@@ -129,52 +129,12 @@ public class EventPageActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 获取选定的事件
                 Event selectedEvent = eventList.get(position);
-
-                // 获取选定事件的文档ID
-                String eventId = selectedEvent.getId();
-                Log.i("event id",eventId);
-                // 创建一个Firestore引用
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 // 创建一个Intent来启动EventDetailActivity
                 Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
-
                 // 将事件文档数据传递给EventDetailActivity
-                intent.putExtra("eventId", eventId);
-
+                intent.putExtra("EVENT", selectedEvent);
                 // 启动EventDetailActivity
                 startActivity(intent);
-//                // 获取事件文档
-//                db.collection("events")
-//                        .document(eventId)
-//                        .get()
-//                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                            @Override
-//                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                                if (documentSnapshot.exists()) {
-//                                    // 获取文档数据
-//                                    Map<String, Object> eventMap = documentSnapshot.getData();
-//
-//                                    // 创建一个Intent来启动EventDetailActivity
-//                                    Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
-//
-//                                    // 将事件文档数据传递给EventDetailActivity
-//                                    intent.putExtra("eventData", (Serializable) eventMap);
-//
-//                                    // 启动EventDetailActivity
-//                                    startActivity(intent);
-//                                } else {
-//                                    // 处理文档不存在的情况
-//                                    Log.d("Document", "Document does not exist");
-//                                }
-//                            }
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                // 处理获取文档失败的情况
-//                                Log.w("Document", "Error getting document", e);
-//                            }
-//                        });
             }
         });
     }
@@ -202,7 +162,6 @@ public class EventPageActivity extends AppCompatActivity {
                             // 将事件对象添加到事件列表中
                             eventList.add(event);
                         }
-
                         // 创建适配器并绑定到ListView，这样可以在UI上显示事件数据
                         eventAdapter = new EventAdapter(EventPageActivity.this, eventList);
                         eventListView.setAdapter(eventAdapter);
