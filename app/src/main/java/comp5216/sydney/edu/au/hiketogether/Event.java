@@ -10,16 +10,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Event implements Serializable {
-    private String id;
-    private String creatorID;
-    private String name;
-    private String address;
-    private String description;
-    private int difficulty;
-    private int teamSize;
-    private long createTimeStamp;
-    private ArrayList<String> members;
-    private ArrayList<String> imageURLs;
+    String id;
+    String creatorID;
+    String name;
+    String address;
+    String description;
+    int difficulty;
+    int teamSize;
+    long createTimeStamp;
+    ArrayList<String> members;
+    ArrayList<String> imageURLs;
 
     // 构造函数
     public Event() {

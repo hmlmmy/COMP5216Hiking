@@ -33,7 +33,6 @@ public class EventPageActivity extends AppCompatActivity {
     Button createEventBtn;
     Button profileBtn;
     Button searchBtn;
-    ListView eventList;
     EventAdapter eventAdapter;
     ListView eventListView;
 
