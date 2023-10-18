@@ -66,17 +66,19 @@ public class RegisterActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 String email, password, username, phone;
                 email = emailEditText.getText().toString();
-                password = emailEditText.getText().toString();
+                password = passwordEditText.getText().toString();
                 username = usernameEditTExt.getText().toString();
                 phone = phoneEditText.getText().toString();
 
                 if (TextUtils.isEmpty(email)) {
                     Toast.makeText(RegisterActivity.this, "Please enter email", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                     return;
                 }
 
                 if (TextUtils.isEmpty(password)) {
                     Toast.makeText(RegisterActivity.this, "Please enter password", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                     return;
                 }
 
