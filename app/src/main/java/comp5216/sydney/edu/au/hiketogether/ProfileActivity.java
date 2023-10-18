@@ -1,17 +1,27 @@
 package comp5216.sydney.edu.au.hiketogether;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
     FirebaseAuth auth;
@@ -87,23 +97,66 @@ public class ProfileActivity extends AppCompatActivity {
         bookedEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //打开Search页面
-                Intent intent = new Intent(ProfileActivity.this,SearchActivity.class);
-                //添加已经book的信息的mark
-                intent.putExtra("key", "value");
-                startActivity(intent);
+                //获取创建者的uid
+                String query = user.getUid().trim();
+
+                // 使用Firebase Firestore来搜索创建者uid符合的事件
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("Event List")
+                        .whereArrayContains("members", query)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                ArrayList<Event> matchedEvents = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                                    matchedEvents.add(event);
+                                }
+                                Intent intent = new Intent(ProfileActivity.this, EventPageActivity.class);
+                                if (matchedEvents.isEmpty()) {
+                                    intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");
+                                } else {
+                                    intent.putExtra("MATCHED_EVENTS", matchedEvents);
+                                }
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(ProfileActivity.this, "Error occurred while searching.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
 
         myEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //打开CreateEvent页面
-                Intent intent = new Intent(ProfileActivity.this,CreateEventActivity.class);
-                startActivity(intent);
+                //获取创建者的uid
+                String query = user.getUid().trim();
+
+                // 使用Firebase Firestore来搜索创建者uid符合的事件
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("Event List")
+                        .whereEqualTo("creatorID",query)
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                ArrayList<Event> matchedEvents = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                                    matchedEvents.add(event);
+                                }
+                                Intent intent = new Intent(ProfileActivity.this, EventPageActivity.class);
+                                if (matchedEvents.isEmpty()) {
+                                    intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");
+                                } else {
+                                    intent.putExtra("MATCHED_EVENTS", matchedEvents);
+                                }
+                                startActivity(intent);
+                            } else {
+                                Toast.makeText(ProfileActivity.this, "Error occurred while searching.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
-
         darkmodeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
