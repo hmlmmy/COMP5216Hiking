@@ -10,9 +10,9 @@
 
     <!-- 用户头像 -->
     <!--        android:src="@drawable/default_profile_image" &lt;!&ndash; 替换为用户头像资源 &ndash;&gt;-->
-<!--    android:layout_below="@+id/usernameTextView"-->
-<!--    android:layout_centerHorizontal="true"-->
-<!--    android:layout_marginTop="16dp" />-->
+    <!--    android:layout_below="@+id/usernameTextView"-->
+    <!--    android:layout_centerHorizontal="true"-->
+    <!--    android:layout_marginTop="16dp" />-->
 
     <!-- Headline 模块 -->
 
@@ -33,22 +33,70 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
-        android:id="@+id/profileImageView"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:layout_marginTop="7dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+    <!--android:src="@drawable/default.png"-->
+
+
+    <LinearLayout
+        android:id="@+id/userdetailsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileImageView"
+        android:layout_marginTop="260dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- 标题 -->
+
+        <TextView
+            android:id="@+id/userdetailsLayoutTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UserDetails"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/userdetailsEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email："
+            android:textSize="18sp"
+            android:textStyle="italic" />
+
+
+        <TextView
+            android:id="@+id/emailtextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="None"
+            android:textStyle="italic"/>
+
+        <TextView
+            android:id="@+id/userdetailsPhone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone number："
+            android:textSize="18sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/phonetextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="None"
+            android:textStyle="italic"/>
+
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/headlineLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/profileImageView"
-        android:layout_marginTop="280dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="388dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -88,7 +136,8 @@
         android:id="@+id/preferenceLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="164dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="144dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -105,11 +154,6 @@
         <!-- Language 跳转按钮 -->
 
         <!-- Dark Mode 跳转按钮 -->
-        <Button
-            android:id="@+id/darkModeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Dark Mode" />
 
     </LinearLayout>
 
@@ -118,7 +162,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="648dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="664dp"
         android:text="logout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -128,8 +173,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="132dp"
         android:text="EDIT"
         app:layout_constraintBottom_toTopOf="@+id/headlineLayout"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/darkModeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="96dp"
+        android:text="Dark Mode"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

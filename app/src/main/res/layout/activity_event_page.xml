@@ -22,15 +22,6 @@
     </RelativeLayout>
 
     <!-- Event列表 -->
-    <ListView
-        android:id="@+id/eventList"
-        android:layout_width="272dp"
-        android:layout_height="463dp"
-        android:layout_below="@id/header"
-        android:layout_marginStart="58dp"
-        android:layout_marginTop="116dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/header" />
 
     <!--        android:menu="@menu/bottom_navigation_menu"-->
 
@@ -38,13 +29,24 @@
 
     <!-- 底部导航栏 -->
 
+    <ListView
+        android:id="@+id/eventList"
+        android:layout_width="380dp"
+        android:layout_height="580dp"
+        android:layout_below="@id/header"
+        android:layout_marginTop="70dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
     <TextView
         android:id="@+id/title"
         android:layout_width="134dp"
         android:layout_height="38dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="40dp"
-        android:text="Event Page"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="20dp"
+        android:text="Events"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -54,7 +56,7 @@
         android:layout_width="101dp"
         android:layout_height="42dp"
         android:layout_marginStart="100dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="16dp"
         android:text="Search"
         app:layout_constraintStart_toEndOf="@+id/title"
         app:layout_constraintTop_toTopOf="parent" />

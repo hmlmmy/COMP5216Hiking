@@ -96,22 +96,24 @@ public class SearchActivity extends AppCompatActivity {
 
         // 使用Firebase Firestore来搜索匹配的事件
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("events")
-                .whereGreaterThanOrEqualTo("eventName", query.toLowerCase())
-                .whereLessThanOrEqualTo("eventName", query.toLowerCase() + "\uf8ff")
+        db.collection("Event List")
+                .whereGreaterThanOrEqualTo("name", query.toLowerCase())
+                .whereLessThanOrEqualTo("name", query.toLowerCase() + "\uf8ff")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        ArrayList<String> matchedEventNames = new ArrayList<>();
+                        ArrayList<Event> matchedEvents = new ArrayList<>();
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            matchedEventNames.add(document.getString("eventName"));
+                            Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                            matchedEvents.add(event);
                         }
 
+
                         Intent intent = new Intent(this, EventPageActivity.class);
-                        if (matchedEventNames.isEmpty()) {
+                        if (matchedEvents.isEmpty()) {
                             intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");
                         } else {
-                            intent.putStringArrayListExtra("MATCHED_EVENTS", matchedEventNames);
+                            intent.putExtra("MATCHED_EVENTS", matchedEvents);
                         }
                         startActivity(intent);
                     } else {

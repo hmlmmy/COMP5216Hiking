@@ -33,9 +33,8 @@ public class EventPageActivity extends AppCompatActivity {
     Button createEventBtn;
     Button profileBtn;
     Button searchBtn;
-    private ListView eventList;
-    private EventAdapter eventAdapter;
-    private ListView eventListView;
+    EventAdapter eventAdapter;
+    ListView eventListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +46,7 @@ public class EventPageActivity extends AppCompatActivity {
         createEventBtn = findViewById(R.id.buttonCreateEvent);
         profileBtn = findViewById(R.id.buttonProfile);
         searchBtn = findViewById(R.id.searchButton);
+        eventListView = findViewById(R.id.eventList);
 
         homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,8 +54,6 @@ public class EventPageActivity extends AppCompatActivity {
                 startActivity(new Intent(EventPageActivity.this, MainActivity.class));
             }
         });
-
-
 
         createEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,18 +72,17 @@ public class EventPageActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EventPageActivity.this, SearchActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(EventPageActivity.this, SearchActivity.class));
             }
         });
 
         // 检查是否从 SearchActivity 接收到了数据
         Intent intent = getIntent();
-        ArrayList<String> matchedEventNames = intent.getStringArrayListExtra("MATCHED_EVENTS");
-        if (matchedEventNames != null && !matchedEventNames.isEmpty()) {
-            // 显示匹配的事件名
-            ArrayAdapter<String> matchedEventsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, matchedEventNames);
-            eventList.setAdapter(matchedEventsAdapter);
+        ArrayList<Event> matchedEvents = (ArrayList<Event>) intent.getSerializableExtra("MATCHED_EVENTS");
+        if (matchedEvents != null && !matchedEvents.isEmpty()) {
+            // 显示匹配的活动
+            eventAdapter = new EventAdapter(EventPageActivity.this, matchedEvents);
+            eventListView.setAdapter(eventAdapter);
         } else {
             String errorMessage = intent.getStringExtra("ERROR_MESSAGE");
             if (errorMessage != null) {
@@ -101,11 +98,11 @@ public class EventPageActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // 获取事件列表视图
 //        ListView eventListView = findViewById(R.id.eventList);
-        eventListView = findViewById(R.id.eventList);
+
         // 创建一个事件数据列表
         ArrayList<Event> eventList = new ArrayList<>();
         // 获取所有事件
-        db.collection("events")
+        db.collection("Event List")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -132,52 +129,12 @@ public class EventPageActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // 获取选定的事件
                 Event selectedEvent = eventList.get(position);
-
-                // 获取选定事件的文档ID
-                String eventId = selectedEvent.getId();
-                Log.i("event id",eventId);
-                // 创建一个Firestore引用
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
                 // 创建一个Intent来启动EventDetailActivity
                 Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
-
                 // 将事件文档数据传递给EventDetailActivity
-                intent.putExtra("eventId", eventId);
-
+                intent.putExtra("EVENT", selectedEvent);
                 // 启动EventDetailActivity
                 startActivity(intent);
-//                // 获取事件文档
-//                db.collection("events")
-//                        .document(eventId)
-//                        .get()
-//                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                            @Override
-//                            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                                if (documentSnapshot.exists()) {
-//                                    // 获取文档数据
-//                                    Map<String, Object> eventMap = documentSnapshot.getData();
-//
-//                                    // 创建一个Intent来启动EventDetailActivity
-//                                    Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
-//
-//                                    // 将事件文档数据传递给EventDetailActivity
-//                                    intent.putExtra("eventData", (Serializable) eventMap);
-//
-//                                    // 启动EventDetailActivity
-//                                    startActivity(intent);
-//                                } else {
-//                                    // 处理文档不存在的情况
-//                                    Log.d("Document", "Document does not exist");
-//                                }
-//                            }
-//                        })
-//                        .addOnFailureListener(new OnFailureListener() {
-//                            @Override
-//                            public void onFailure(@NonNull Exception e) {
-//                                // 处理获取文档失败的情况
-//                                Log.w("Document", "Error getting document", e);
-//                            }
-//                        });
             }
         });
     }
@@ -190,7 +147,7 @@ public class EventPageActivity extends AppCompatActivity {
         ArrayList<Event> eventList = new ArrayList<>();
 
         // 使用Firestore的查询来获取'events'集合中的所有文档（即所有事件）
-        db.collection("events")
+        db.collection("Event List")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -205,7 +162,6 @@ public class EventPageActivity extends AppCompatActivity {
                             // 将事件对象添加到事件列表中
                             eventList.add(event);
                         }
-
                         // 创建适配器并绑定到ListView，这样可以在UI上显示事件数据
                         eventAdapter = new EventAdapter(EventPageActivity.this, eventList);
                         eventListView.setAdapter(eventAdapter);

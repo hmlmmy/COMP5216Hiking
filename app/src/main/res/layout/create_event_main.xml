@@ -9,13 +9,13 @@
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="593dp"
+        android:layout_height="629dp"
         android:background="@color/cardview_light_background"></androidx.viewpager2.widget.ViewPager2>
 
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="match_parent"
-        android:layout_height="108dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="0dp"
         android:gravity="center"
         android:orientation="vertical">
@@ -27,12 +27,6 @@
             android:layout_weight="1"
             android:text="Create" />
 
-        <Button
-            android:id="@+id/cancelButton"
-            android:layout_width="379dp"
-            android:layout_height="15dp"
-            android:layout_weight="1"
-            android:text="Cancel" />
     </LinearLayout>
 
 </LinearLayout>
