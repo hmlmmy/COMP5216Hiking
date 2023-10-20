@@ -31,7 +31,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.sql.Array;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.HashMap;
 import java.util.List;
@@ -45,12 +48,14 @@ public class CreateEventActivity extends AppCompatActivity {
     FirebaseUser user;
     String Description;
     String EventID;
-    String CreatorEmail;
+    String CreatorID;
     String ImageUrl;
     String EventName;
     String Address;
     String Difficulty;
-    List<String> MemberEmail = new ArrayList<>();
+    int DifficultyInt;
+    int TeamSize;
+    List<String> Members = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +65,6 @@ public class CreateEventActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
-
 
         // 检查权限状态
         if (checkPermissions()) {
@@ -80,36 +84,56 @@ public class CreateEventActivity extends AppCompatActivity {
                 int currentPage = viewPager.getCurrentItem();
                 ViewPagerAdapter adapter = (ViewPagerAdapter) viewPager.getAdapter();
                 //event介绍
+                assert adapter != null;
                 EventName = adapter.getUserInput(0);
                 Description = adapter.getUserInput(1);
                 Address = adapter.getUserInput(2);
                 Difficulty = adapter.getUserInput(3);
+
                 //eventID
                 EventID = UUID.randomUUID().toString();
                 //创建者Email
-                CreatorEmail = user.getEmail();
-
-
+                CreatorID = user.getUid();
 
                 //ImageUrl  这个是下载的URL
-                uploadEvent(EventName,ImageUrl,EventID,CreatorEmail,MemberEmail,Description,Address,Difficulty);
+                uploadEvent(EventName,ImageUrl,EventID,CreatorID,Members,Description,Address,Difficulty);
             }
         });
     }
 
-    public void uploadEvent(String EventName,String ImageUrl, String EventID, String CreatorEmail, List<String> MemberEmail,String Description,String Address, String Difficulty){
+    public void uploadEvent(String EventName,String ImageUrl, String EventID, String CreatorID, List<String> Members,String Description,String Address, String Difficulty){
         CollectionReference EventInfo = db.collection("Event List");
 
         Map<String, Object> data1 = new HashMap<>();
 
+        // get difficulty int
+        if (Objects.equals(Difficulty, "easy")) {
+            DifficultyInt = 0;
+        } else if (Objects.equals(Difficulty, "normal")) {
+            DifficultyInt = 1;
+        } else if (Objects.equals(Difficulty, "hard")) {
+            DifficultyInt = 2;
+        } else {
+            Log.i("Wrong difficulty string", Difficulty);
+        }
+
+        // get current time
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Long timestampLong = timestamp.getTime();
+
+        ArrayList<String> imageURLs = new ArrayList<String>();
+        imageURLs.add(ImageUrl);
+
         //单个event的数据
-        data1.put("Event Name",EventName);
-        data1.put("Creator Email",CreatorEmail);
-        data1.put("Address",Address);
-        data1.put("Difficulty",Difficulty);
-        data1.put("Description",Description);
-        data1.put("Image",ImageUrl);
-        data1.put("Member Email",MemberEmail);
+        data1.put("name",EventName);
+        data1.put("creatorID",CreatorID);
+        data1.put("address",Address);
+        data1.put("difficulty",DifficultyInt);
+        data1.put("teamSize",4);
+        data1.put("createTimeStamp",timestampLong);
+        data1.put("description",Description);
+        data1.put("members",Members);
+        data1.put("imageURLs",imageURLs);
 
         //放EventID进去
         EventInfo.document(EventID).set(data1);
@@ -117,7 +141,7 @@ public class CreateEventActivity extends AppCompatActivity {
         //把EventID放到对应User的数据集中去
         CollectionReference UserInfo = db.collection("User_profile");
 
-        UserInfo.document(CreatorEmail)
+        UserInfo.document(CreatorID)
                 .get().addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         // 获取文档中的数据
@@ -127,7 +151,7 @@ public class CreateEventActivity extends AppCompatActivity {
                             ArrayList<String> stringList = (ArrayList<String>) data.get("Created Events");
                             stringList.add(EventID);
                             // 将新字符串添加到列表中
-                            UserInfo.document(CreatorEmail).update("Created Events",stringList)
+                            UserInfo.document(CreatorID).update("Created Events",stringList)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
