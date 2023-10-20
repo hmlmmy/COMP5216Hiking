@@ -40,8 +40,7 @@
         android:id="@+id/userdetailsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profileImageView"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="232dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -70,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="None"
-            android:textStyle="italic"/>
+            android:textStyle="italic" />
 
         <TextView
             android:id="@+id/userdetailsPhone"
@@ -85,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="None"
-            android:textStyle="italic"/>
+            android:textStyle="italic" />
 
 
     </LinearLayout>
@@ -94,9 +93,8 @@
         android:id="@+id/headlineLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/profileImageView"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="388dp"
+        android:layout_marginTop="368dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -137,12 +135,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginBottom="144dp"
+        android:layout_marginTop="13dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/headlineLayout">
 
         <!-- Preference 标题 -->
+
         <TextView
             android:id="@+id/preferenceTitleTextView"
             android:layout_width="wrap_content"
@@ -150,6 +149,15 @@
             android:text="Preference"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/darkModeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="32dp"
+            android:text="Dark Mode"
+            tools:ignore="MissingConstraints" />
 
         <!-- Language 跳转按钮 -->
 
@@ -163,29 +171,19 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="664dp"
+        android:layout_marginBottom="5dp"
         android:text="logout"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/editProfile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
-        android:layout_marginBottom="132dp"
+        android:layout_marginTop="52dp"
         android:text="EDIT"
-        app:layout_constraintBottom_toTopOf="@+id/headlineLayout"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/darkModeButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="96dp"
-        android:text="Dark Mode"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
