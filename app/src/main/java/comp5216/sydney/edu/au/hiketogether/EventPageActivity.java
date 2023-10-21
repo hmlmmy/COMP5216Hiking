@@ -79,7 +79,7 @@ public class EventPageActivity extends AppCompatActivity {
 
         // 检查是否从 SearchActivity 接收到了数据
         Intent intent = getIntent();
-        ArrayList<Event> matchedEvents = (ArrayList<Event>) intent.getSerializableExtra("MATCHED_EVENTS");
+        ArrayList<Event> matchedEvents = (ArrayList<Event>) intent.getSerializableExtra(" MATCHED EVENT");
         if (matchedEvents != null && !matchedEvents.isEmpty()) {
             // 显示匹配的活动
             eventAdapter = new EventAdapter(EventPageActivity.this, matchedEvents);

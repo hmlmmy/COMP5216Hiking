@@ -65,6 +65,7 @@ public class CreateEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event_main);
 
+        EventID = UUID.randomUUID().toString();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
 
@@ -93,7 +94,7 @@ public class CreateEventActivity extends AppCompatActivity {
                 Difficulty = adapter.getUserInput(3);
 
                 //eventID
-                EventID = UUID.randomUUID().toString();
+
                 //创建者Email
                 CreatorID = user.getUid();
 
@@ -236,11 +237,13 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
     public void upload_firebase(Uri imageUri) {
+
         // 获取Firebase存储的引用
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
 // 创建一个存储路径，其中"images"是存储桶的名称，"eventID.jpg"是要上传的文件名
-        StorageReference imageRef = storageRef.child("images/your_image.jpg");
+        String UserName = user.toString();
+        StorageReference imageRef = storageRef.child(UserName + "/" + EventID);
 
 // 将本地文件（通过imageUri指定）上传到Firebase存储
         UploadTask uploadTask = imageRef.putFile(imageUri);

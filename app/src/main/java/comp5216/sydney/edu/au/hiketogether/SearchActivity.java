@@ -141,9 +141,8 @@ public class SearchActivity extends AppCompatActivity {
         }else{
             searchAddress(addressSearch);
         }
-
-
     }
+
     public void searchName(Task<QuerySnapshot> nameSearch){
         Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(nameSearch);
 
