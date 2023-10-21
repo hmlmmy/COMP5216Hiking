@@ -127,7 +127,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //获取创建者的uid
-                String query = user.getUid().trim();
+                String query = user.getUid();
 
                 // 使用Firebase Firestore来搜索创建者uid符合的事件
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -139,6 +139,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 ArrayList<Event> matchedEvents = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                                    event.setId(document.getId());
                                     matchedEvents.add(event);
                                 }
                                 Intent intent = new Intent(ProfileActivity.this, EventPageActivity.class);
@@ -171,6 +172,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 ArrayList<Event> matchedEvents = new ArrayList<>();
                                 for (QueryDocumentSnapshot document : task.getResult()) {
                                     Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                                    event.setId(document.getId());
                                     matchedEvents.add(event);
                                 }
                                 Intent intent = new Intent(ProfileActivity.this, EventPageActivity.class);

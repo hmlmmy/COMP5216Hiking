@@ -88,7 +88,9 @@ public class EventDetailActivity extends AppCompatActivity {
         Button quitButton = findViewById(R.id.quitButton);
 
         Event event = (Event) getIntent().getSerializableExtra("EVENT");
+        Log.i("event name: ", event.getName());
         String eventId = event.getId();
+        Log.i("event id: ", eventId);
         // update UI
         assert event != null;
         name.setText(event.getName());
