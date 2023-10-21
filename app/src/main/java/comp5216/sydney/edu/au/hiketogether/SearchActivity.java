@@ -19,8 +19,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class SearchActivity extends AppCompatActivity {
     // 声明界面组件
@@ -96,28 +100,43 @@ public class SearchActivity extends AppCompatActivity {
 
         // 使用Firebase Firestore来搜索匹配的事件
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("Event List")
-                .whereGreaterThanOrEqualTo("name", query.toLowerCase())
-                .whereLessThanOrEqualTo("name", query.toLowerCase() + "\uf8ff")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        ArrayList<Event> matchedEvents = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            Event event = document.toObject(Event.class); // 将文档转换为Event对象
-                            matchedEvents.add(event);
-                        }
 
-                        Intent intent = new Intent(this, EventPageActivity.class);
-                        if (matchedEvents.isEmpty()) {
-                            intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");
-                        } else {
-                            intent.putExtra("MATCHED_EVENTS", matchedEvents);
-                        }
-                        startActivity(intent);
-                    } else {
-                        Toast.makeText(this, "Error occurred while searching.", Toast.LENGTH_SHORT).show();
+        // 创建name和address的范围查询
+        Query nameQuery = db.collection("Event List")
+                .whereGreaterThanOrEqualTo("name", query)
+                .whereLessThanOrEqualTo("name", query + "\uf8ff");
+
+        Query addressQuery = db.collection("Event List")
+                .whereGreaterThanOrEqualTo("address", query)
+                .whereLessThanOrEqualTo("address", query + "\uf8ff");
+
+        // 使用Task的组合功能来合并这两个查询的结果
+        Task<QuerySnapshot> nameSearch = nameQuery.get();
+        Task<QuerySnapshot> addressSearch = addressQuery.get();
+
+        Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(nameSearch, addressSearch);
+
+        combinedTask.addOnSuccessListener(querySnapshots -> {
+            ArrayList<Event> matchedEvents = new ArrayList<>();
+            for (QuerySnapshot snapshot : querySnapshots) {
+                for (QueryDocumentSnapshot document : snapshot) {
+                    Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                    if (!matchedEvents.contains(event)) {
+                        matchedEvents.add(event);
                     }
-                });
+                }
+            }
+
+            Intent intent = new Intent(this, EventPageActivity.class);
+            if (matchedEvents.isEmpty()) {
+                intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");
+            } else {
+                intent.putExtra("MATCHED_EVENTS", matchedEvents);
+            }
+            startActivity(intent);
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Error occurred while searching.", Toast.LENGTH_SHORT).show();
+        });
     }
+
 }
