@@ -34,6 +34,7 @@ public class ProfileActivity extends AppCompatActivity {
     TextView Username;
 
     TextView userEmail;
+    TextView userAccountEmail;
     TextView PhoneNum;
 
     @SuppressLint("MissingInflatedId")
@@ -49,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
         Username = findViewById(R.id.usernameTextView);
         editBtn = findViewById(R.id.editProfile);
         userEmail = findViewById(R.id.emailtextView);
+        userAccountEmail = findViewById(R.id.accountEmailtextView);
         PhoneNum = findViewById(R.id.phonetextView);
         createEventBtn = findViewById(R.id.CreateEventButton);
         bookedEventBtn = findViewById(R.id.bookedEventButton);
@@ -59,6 +61,8 @@ public class ProfileActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+
+        userAccountEmail.setText(user.getEmail());
 
         // get creator info (name, email, phone) by UID
         String userID = user.getUid();
