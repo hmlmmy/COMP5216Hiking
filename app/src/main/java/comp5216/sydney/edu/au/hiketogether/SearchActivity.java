@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
 
@@ -40,6 +41,10 @@ public class SearchActivity extends AppCompatActivity {
     private static final String PREFS_NAME = "search_prefs";
     private static final String KEY_HISTORY = "search_history";
 
+    private ImageButton historyArrowButton;
+    private boolean isHistoryVisible = true;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +54,7 @@ public class SearchActivity extends AppCompatActivity {
         searchEditText = findViewById(R.id.searchEditText);
         searchButton = findViewById(R.id.searchButton);
         historyListView = findViewById(R.id.historyListView);
+        historyArrowButton = findViewById(R.id.historyArrowButton);
 
         // 从SharedPreferences加载搜索历史
         loadSearchHistory();
@@ -59,6 +65,9 @@ public class SearchActivity extends AppCompatActivity {
 
         // 设置搜索按钮的点击事件监听
         searchButton.setOnClickListener(v -> performSearch());
+
+        // 设置箭头按钮的点击事件监听
+        historyArrowButton.setOnClickListener(v -> toggleSearchHistory());
 
         // 设置历史搜索记录的点击事件，点击后填充搜索框并执行搜索
         historyListView.setOnItemClickListener((parent, view, position, id) -> {
@@ -89,10 +98,23 @@ public class SearchActivity extends AppCompatActivity {
 
     // 执行搜索操作
     private void performSearch() {
+//        String query = searchEditText.getText().toString().trim();
+//
+//        // 如果搜索内容不为空且历史记录中不存在，则保存到搜索历史
+//        if (!query.isEmpty() && !searchHistory.contains(query)) {
+//            searchHistory.add(0, query);
+//            historyAdapter.notifyDataSetChanged();
+//            saveSearchHistory();
+//        }
         String query = searchEditText.getText().toString().trim();
 
-        // 如果搜索内容不为空且历史记录中不存在，则保存到搜索历史
-        if (!query.isEmpty() && !searchHistory.contains(query)) {
+        // 如果搜索内容不为空
+        if (!query.isEmpty()) {
+            // 如果历史记录中存在该搜索字段，先移除它
+            if (searchHistory.contains(query)) {
+                searchHistory.remove(query);
+            }
+            // 将搜索字段添加到搜索历史的开头
             searchHistory.add(0, query);
             historyAdapter.notifyDataSetChanged();
             saveSearchHistory();
@@ -137,6 +159,17 @@ public class SearchActivity extends AppCompatActivity {
         }).addOnFailureListener(e -> {
             Toast.makeText(this, "Error occurred while searching.", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void toggleSearchHistory() {
+        if (isHistoryVisible) {
+            historyListView.setVisibility(View.GONE);
+            historyArrowButton.setBackgroundResource(android.R.drawable.arrow_down_float);
+        } else {
+            historyListView.setVisibility(View.VISIBLE);
+            historyArrowButton.setBackgroundResource(android.R.drawable.arrow_up_float);
+        }
+        isHistoryVisible = !isHistoryVisible;
     }
 
 }
