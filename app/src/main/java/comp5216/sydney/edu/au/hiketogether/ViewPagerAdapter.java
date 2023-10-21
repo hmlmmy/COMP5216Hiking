@@ -47,7 +47,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         //添加用户自己
         addMember(userEmail);
         //default路径
-        CollectionReference userInfo = db.collection("User_profile");
+        CollectionReference userInfo = db.collection("User Profile");
 
         Map<String, Object> data1 = new HashMap<>();
 
