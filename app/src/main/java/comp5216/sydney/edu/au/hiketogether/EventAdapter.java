@@ -75,10 +75,13 @@ public class EventAdapter extends BaseAdapter {
         // set publish date
         publishDate.setText("Publish Date: " + convertTimestampToDate(event.getCreateTimeStamp()));
         // set image
-        String imageUrl = event.getImageURLs().get(0);
-        Glide.with(context)
-                .load(imageUrl)
-                .into(image);
+
+        if (event.getImageURLs() != null && !event.getImageURLs().isEmpty()) {
+            String imageUrl = event.getImageURLs().get(0);
+            Glide.with(context)
+                    .load(imageUrl)
+                    .into(image);
+        }
 
         return rowView;
     }
