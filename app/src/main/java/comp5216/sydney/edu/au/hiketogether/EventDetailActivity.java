@@ -179,7 +179,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                                     public void onSuccess(Void aVoid) {
                                                         // 更新成功，用户已成功加入事件
                                                         // 可以在这里执行相应的操作，例如显示消息
-                                                        Toast.makeText(EventDetailActivity.this, "Join successfully!", Toast.LENGTH_SHORT).show();
+                                                        //Toast.makeText(EventDetailActivity.this, "Join successfully!", Toast.LENGTH_SHORT).show();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -191,7 +191,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                                 });
                                     } else {
                                         // 用户已经预定了这个事件
-                                        Toast.makeText(EventDetailActivity.this, "You have joined this event", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(EventDetailActivity.this, "You have joined this event", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
                                     // 没有匹配邮箱的用户文档，处理错误
@@ -206,6 +206,60 @@ public class EventDetailActivity extends AppCompatActivity {
                                 Toast.makeText(EventDetailActivity.this, "Fail to query user documents: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
+
+                db.collection("Event List").document(eventId)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    // 获取事件文档中的成员数组
+                                    List<String> members = (List<String>) documentSnapshot.get("members");
+
+                                    if (members == null) {
+                                        members = new ArrayList<>();
+                                    }
+
+                                    // 检查用户是否已经是该事件的成员
+                                    if (!members.contains(currentUID)) {
+                                        // 如果用户不是该事件的成员，将用户ID添加到成员数组
+                                        members.add(currentUID);
+
+                                        // 更新事件文档
+                                        documentSnapshot.getReference().update("members", members)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        // 更新成功，用户已成功加入事件
+                                                        // 可以在这里执行相应的操作，例如显示消息
+                                                        Toast.makeText(EventDetailActivity.this, "Join successfully!", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        // 更新失败，处理错误
+                                                        Log.e("Update", "Error updating document: " + e.getMessage());
+                                                    }
+                                                });
+                                    } else {
+                                        // 用户已经是该事件的成员，可以显示相应消息
+                                        Toast.makeText(EventDetailActivity.this, "You have joined this event", Toast.LENGTH_SHORT).show();
+                                    }
+                                } else {
+                                    // 处理文档不存在的情况
+                                    Log.d("Document", "Event document does not exist");
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // 查询失败，处理错误
+                                Log.e("Query", "Error getting event document: " + e.getMessage());
+                            }
+                        });
+
             }
         });
 
@@ -236,7 +290,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                                         public void onSuccess(Void aVoid) {
                                                             // 更新成功，用户已成功退出事件
                                                             // 可以在这里执行相应的操作，例如显示消息
-                                                            Toast.makeText(EventDetailActivity.this, "Quit successfully!", Toast.LENGTH_SHORT).show();
+                                                            //Toast.makeText(EventDetailActivity.this, "Quit successfully!", Toast.LENGTH_SHORT).show();
                                                         }
                                                     })
                                                     .addOnFailureListener(new OnFailureListener() {
@@ -248,7 +302,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                                     });
                                         } else {
                                             // 用户没有预定这个事件，你可以在这里显示相应的消息
-                                            Toast.makeText(EventDetailActivity.this, "You have not joined this event", Toast.LENGTH_SHORT).show();
+                                            //Toast.makeText(EventDetailActivity.this, "You have not joined this event yet", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 } else {
@@ -264,6 +318,58 @@ public class EventDetailActivity extends AppCompatActivity {
                                 Toast.makeText(EventDetailActivity.this, "Fail to query user documents: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
+
+                db.collection("Event List").document(eventId)
+                        .get()
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                if (documentSnapshot.exists()) {
+                                    // 获取事件文档中的成员数组
+                                    List<String> members = (List<String>) documentSnapshot.get("members");
+
+                                    if (members != null) {
+                                        // 检查成员数组中是否包含当前用户ID
+                                        if (members.contains(currentUID)) {
+                                            // 如果成员数组包含当前用户ID，将其从数组中移除
+                                            members.remove(currentUID);
+
+                                            // 更新事件文档
+                                            documentSnapshot.getReference().update("members", members)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            // 更新成功，从事件中移除用户ID
+                                                            // 可以在这里执行相应的操作，例如显示消息
+                                                            Toast.makeText(EventDetailActivity.this, "Quit successfully!", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            // 更新失败，处理错误
+                                                            Log.e("Update", "Error updating document: " + e.getMessage());
+                                                        }
+                                                    });
+                                        } else {
+                                            // 如果成员数组不包含当前用户ID，可以显示相应消息
+                                            Toast.makeText(EventDetailActivity.this, "You have not joined this event yet!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                } else {
+                                    // 处理文档不存在的情况
+                                    Log.d("Document", "Event document does not exist");
+                                }
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // 查询失败，处理错误
+                                Log.e("Query", "Error getting event document: " + e.getMessage());
+                            }
+                        });
+
             }
         });
     }
