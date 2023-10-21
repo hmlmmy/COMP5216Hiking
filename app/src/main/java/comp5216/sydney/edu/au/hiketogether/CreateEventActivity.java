@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
@@ -132,6 +133,11 @@ public class CreateEventActivity extends AppCompatActivity {
             Toast.makeText(CreateEventActivity.this, "Invalid difficulty, only accepts 'easy', 'medium' or 'hard'.", Toast.LENGTH_SHORT).show();
             return;
         }
+        // imageURL check
+        if (ImageUrl == null || ImageUrl.equals("")) {
+            Toast.makeText(CreateEventActivity.this, "Please provide image.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // get current time
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -153,35 +159,45 @@ public class CreateEventActivity extends AppCompatActivity {
 
         //放EventID进去
         EventInfo.document(EventID).set(data1);
+        //Toast.makeText(CreateEventActivity.this, "Event created successfully.", Toast.LENGTH_SHORT).show();
 
-        //把EventID放到对应User的数据集中去
-        CollectionReference UserInfo = db.collection("User_profile");
-
-        UserInfo.document(CreatorID)
-                .get().addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        // 获取文档中的数据
-                        Map<String, Object> data = documentSnapshot.getData();
-                        if (data != null) {
-                            // 检索字符串列表
-                            ArrayList<String> stringList = (ArrayList<String>) data.get("Created Events");
-                            stringList.add(EventID);
-                            // 将新字符串添加到列表中
-                            UserInfo.document(CreatorID).update("Created Events", stringList)
+        db.collection("User Profile").document(CreatorID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot document) {
+                        if (document.exists()) {
+                            // add eventID to createdEvents
+                            // 获取用户的 createdEvents 数组
+                            List<String> createdEvents = (List<String>) document.get("createdEvents");
+                            if (createdEvents == null) {
+                                createdEvents = new ArrayList<>();
+                            }
+                            createdEvents.add(EventID);
+                            // 更新用户文档
+                            document.getReference().update("createdEvents", createdEvents)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "DocumentSnapshot successfully updated!");
+                                            Toast.makeText(CreateEventActivity.this, "Event created successfully.", Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "Error updating document", e);
+                                            // 更新失败，处理错误
+                                            Toast.makeText(CreateEventActivity.this, "Event creation failed." + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
-
+                        } else {
+                            Toast.makeText(CreateEventActivity.this, "Unable to find user profile", Toast.LENGTH_SHORT).show();
                         }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(CreateEventActivity.this, "Get Firebase collection failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
