@@ -41,19 +41,11 @@ public class EventPageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_page); // 设置活动的布局
 
-        homeBtn = findViewById(R.id.buttonHome);
         eventBtn = findViewById(R.id.buttonEvent);
         createEventBtn = findViewById(R.id.buttonCreateEvent);
         profileBtn = findViewById(R.id.buttonProfile);
         searchBtn = findViewById(R.id.searchButton);
         eventListView = findViewById(R.id.eventList);
-
-        homeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(EventPageActivity.this, MainActivity.class));
-            }
-        });
 
         createEventBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,50 +139,6 @@ public class EventPageActivity extends AppCompatActivity {
                 });
             }
         }
-
-//        // 初始化 Firestore
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        // 获取事件列表视图
-////        ListView eventListView = findViewById(R.id.eventList);
-//
-//        // 创建一个事件数据列表
-//        ArrayList<Event> eventList = new ArrayList<>();
-//        // 获取所有事件
-//        db.collection("Event List")
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        // 遍历查询结果并添加到事件列表
-//                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-//                            Event event = document.toObject(Event.class);
-//                            // 获取每个事件的文档ID
-//                            String eventId = document.getId();
-//                            event.setId(eventId);
-//                            //Log.i("event id",eventId);
-//                            eventList.add(event);
-//                        }
-//
-//                        // 创建适配器并将事件列表绑定到 ListView
-//                        eventAdapter = new EventAdapter(EventPageActivity.this, eventList);
-//                        eventListView.setAdapter(eventAdapter);
-//                    }
-//                });
-//
-//        // 为ListView的项添加点击事件监听器
-//        eventListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                // 获取选定的事件
-//                Event selectedEvent = eventList.get(position);
-//                // 创建一个Intent来启动EventDetailActivity
-//                Intent intent = new Intent(EventPageActivity.this, EventDetailActivity.class);
-//                // 将事件文档数据传递给EventDetailActivity
-//                intent.putExtra("EVENT", selectedEvent);
-//                // 启动EventDetailActivity
-//                startActivity(intent);
-//            }
-//        });
     }
 
     private void loadAllEvents() {
