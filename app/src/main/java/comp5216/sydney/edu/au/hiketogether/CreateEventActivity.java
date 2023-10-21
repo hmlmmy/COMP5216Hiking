@@ -1,4 +1,5 @@
 package comp5216.sydney.edu.au.hiketogether;
+
 import static android.content.ContentValues.TAG;
 import static comp5216.sydney.edu.au.hiketogether.ViewPagerAdapter.ViewPagerViewHolder.REQUEST_CODE_PICK_IMAGE;
 
@@ -53,10 +54,10 @@ public class CreateEventActivity extends AppCompatActivity {
     String EventName;
     String Address;
     String Difficulty;
-    int DifficultyInt;
-    int TeamSize;
+
     List<String> Members = new ArrayList<>();
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -96,25 +97,40 @@ public class CreateEventActivity extends AppCompatActivity {
                 CreatorID = user.getUid();
 
                 //ImageUrl  这个是下载的URL
-                uploadEvent(EventName,ImageUrl,EventID,CreatorID,Members,Description,Address,Difficulty);
+                uploadEvent(EventName, ImageUrl, EventID, CreatorID, Members, Description, Address, Difficulty);
             }
         });
     }
 
-    public void uploadEvent(String EventName,String ImageUrl, String EventID, String CreatorID, List<String> Members,String Description,String Address, String Difficulty){
+    public void uploadEvent(String EventName, String ImageUrl, String EventID, String CreatorID, List<String> Members, String Description, String Address, String Difficulty) {
         CollectionReference EventInfo = db.collection("Event List");
-
         Map<String, Object> data1 = new HashMap<>();
 
+        // validate string inputs
+        if (EventName == null || EventName.equals("")) {
+            Toast.makeText(CreateEventActivity.this, "Please enter event name", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Address == null || Address.equals("")) {
+            Toast.makeText(CreateEventActivity.this, "Please enter address", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (Description == null || Description.equals("")) {
+            Toast.makeText(CreateEventActivity.this, "Please enter description", Toast.LENGTH_SHORT).show();
+            return;
+        }
         // get difficulty int
-        if (Objects.equals(Difficulty, "easy")) {
+        int DifficultyInt;
+        if (Objects.equals(Difficulty.toLowerCase(), "easy")) {
             DifficultyInt = 0;
-        } else if (Objects.equals(Difficulty, "normal")) {
+        } else if (Objects.equals(Difficulty.toLowerCase(), "medium")) {
             DifficultyInt = 1;
-        } else if (Objects.equals(Difficulty, "hard")) {
+        } else if (Objects.equals(Difficulty.toLowerCase(), "hard")) {
             DifficultyInt = 2;
         } else {
             Log.i("Wrong difficulty string", Difficulty);
+            Toast.makeText(CreateEventActivity.this, "Invalid difficulty, only accepts 'easy', 'medium' or 'hard'.", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         // get current time
@@ -125,15 +141,15 @@ public class CreateEventActivity extends AppCompatActivity {
         imageURLs.add(ImageUrl);
 
         //单个event的数据
-        data1.put("name",EventName);
-        data1.put("creatorID",CreatorID);
-        data1.put("address",Address);
-        data1.put("difficulty",DifficultyInt);
-        data1.put("teamSize",4);
-        data1.put("createTimeStamp",timestampLong);
-        data1.put("description",Description);
-        data1.put("members",Members);
-        data1.put("imageURLs",imageURLs);
+        data1.put("name", EventName);
+        data1.put("creatorID", CreatorID);
+        data1.put("address", Address);
+        data1.put("difficulty", DifficultyInt);
+        data1.put("teamSize", 4);
+        data1.put("createTimeStamp", timestampLong);
+        data1.put("description", Description);
+        data1.put("members", Members);
+        data1.put("imageURLs", imageURLs);
 
         //放EventID进去
         EventInfo.document(EventID).set(data1);
@@ -151,7 +167,7 @@ public class CreateEventActivity extends AppCompatActivity {
                             ArrayList<String> stringList = (ArrayList<String>) data.get("Created Events");
                             stringList.add(EventID);
                             // 将新字符串添加到列表中
-                            UserInfo.document(CreatorID).update("Created Events",stringList)
+                            UserInfo.document(CreatorID).update("Created Events", stringList)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -171,13 +187,11 @@ public class CreateEventActivity extends AppCompatActivity {
     }
 
 
-
     //viewPager滑动效果
     private void setupViewPager() {
         ViewPager2 viewPager = findViewById(R.id.pager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter();
         viewPager.setAdapter(viewPagerAdapter);
-
 
 
         viewPagerAdapter.setImagePickerListener(new ViewPagerAdapter.ImagePickerListener() {
@@ -205,7 +219,7 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
-    public void upload_firebase(Uri imageUri){
+    public void upload_firebase(Uri imageUri) {
         // 获取Firebase存储的引用
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 

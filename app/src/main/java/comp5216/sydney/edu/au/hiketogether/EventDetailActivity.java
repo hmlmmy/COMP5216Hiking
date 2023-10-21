@@ -40,7 +40,7 @@ import androidx.viewpager2.widget.ViewPager2;
 public class EventDetailActivity extends AppCompatActivity {
     TextView name;
     TextView address;
-    TextView teamSize;
+    //TextView teamSize;
     TextView difficulty;
     TextView description;
     TextView time;
@@ -71,7 +71,7 @@ public class EventDetailActivity extends AppCompatActivity {
         // Get UI elements
         name = findViewById(R.id.name);
         address = findViewById(R.id.address);
-        teamSize = findViewById(R.id.teamSize);
+        //teamSize = findViewById(R.id.teamSize);
         difficulty = findViewById(R.id.difficulty);
         description = findViewById(R.id.description);
         time = findViewById(R.id.time);
@@ -96,7 +96,7 @@ public class EventDetailActivity extends AppCompatActivity {
             difficulty.setText("Difficulty: " + difficultyLevels[diffIndex]);
         }
         // set team size
-        teamSize.setText("Team Size: " + Integer.toString(event.getTeamSize()));
+        //teamSize.setText("Team Size: " + Integer.toString(event.getTeamSize()));
         // set publish date
         time.setText("Publish Date: " + convertTimestampToDate(event.getCreateTimeStamp()));
         // set description

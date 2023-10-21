@@ -56,7 +56,7 @@ public class EventAdapter extends BaseAdapter {
         TextView name = rowView.findViewById(R.id.name);
         TextView address = rowView.findViewById(R.id.address);
         TextView difficulty = rowView.findViewById(R.id.difficulty);
-        TextView teamSize = rowView.findViewById(R.id.teamSize);
+        //TextView teamSize = rowView.findViewById(R.id.teamSize);
         TextView publishDate = rowView.findViewById(R.id.publishDate);
         ImageView image = rowView.findViewById(R.id.image);
 
@@ -71,7 +71,7 @@ public class EventAdapter extends BaseAdapter {
             difficulty.setText("Difficulty: " + difficultyLevels[diffIndex]);
         }
         // set team size
-        teamSize.setText("Team Size: " + Integer.toString(event.getTeamSize()));
+        //teamSize.setText("Team Size: " + Integer.toString(event.getTeamSize()));
         // set publish date
         publishDate.setText("Publish Date: " + convertTimestampToDate(event.getCreateTimeStamp()));
         // set image
