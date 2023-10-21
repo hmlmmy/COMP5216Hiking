@@ -98,10 +98,7 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
         list = view.findViewById(R.id.create_lst); // 初始化 list
         adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, memberlist); // 初始化适配器
         list.setAdapter(adapter); // 设置适配器
-
         getUserInfo();
-
-
         return new ViewPagerViewHolder(view, viewType);
     }
 
@@ -135,8 +132,6 @@ public class ViewPagerAdapter extends RecyclerView.Adapter<ViewPagerAdapter.View
 
         }
     }
-
-
 
     @Override
     public int getItemCount() {

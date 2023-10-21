@@ -2,23 +2,17 @@ package comp5216.sydney.edu.au.hiketogether;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Spinner;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.ArrayList;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.os.Bundle;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
@@ -27,20 +21,21 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class SearchActivity extends AppCompatActivity {
+    // 定义SharedPreferences的名字和键名
+    private static final String PREFS_NAME = "search_prefs";
+    private static final String KEY_HISTORY = "search_history";
     // 声明界面组件
     private EditText searchEditText;
     private Button searchButton;
     private ListView historyListView;
-
     // 声明搜索历史适配器和列表
     private ArrayAdapter<String> historyAdapter;
     private List<String> searchHistory;
-
-    // 定义SharedPreferences的名字和键名
-    private static final String PREFS_NAME = "search_prefs";
-    private static final String KEY_HISTORY = "search_history";
-
     private ImageButton historyArrowButton;
     private boolean isHistoryVisible = true;
 
@@ -98,22 +93,11 @@ public class SearchActivity extends AppCompatActivity {
 
     // 执行搜索操作
     private void performSearch() {
-//        String query = searchEditText.getText().toString().trim();
-//
-//        // 如果搜索内容不为空且历史记录中不存在，则保存到搜索历史
-//        if (!query.isEmpty() && !searchHistory.contains(query)) {
-//            searchHistory.add(0, query);
-//            historyAdapter.notifyDataSetChanged();
-//            saveSearchHistory();
-//        }
         String query = searchEditText.getText().toString().trim();
-
         // 如果搜索内容不为空
         if (!query.isEmpty()) {
             // 如果历史记录中存在该搜索字段，先移除它
-            if (searchHistory.contains(query)) {
-                searchHistory.remove(query);
-            }
+            searchHistory.remove(query);
             // 将搜索字段添加到搜索历史的开头
             searchHistory.add(0, query);
             historyAdapter.notifyDataSetChanged();
@@ -138,14 +122,14 @@ public class SearchActivity extends AppCompatActivity {
 
         Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(nameSearch, addressSearch);
 
-        if (nameSearch != null){
+        if (nameSearch != null) {
             searchName(nameSearch);
-        }else{
+        } else {
             searchAddress(addressSearch);
         }
     }
 
-    public void searchName(Task<QuerySnapshot> nameSearch){
+    public void searchName(Task<QuerySnapshot> nameSearch) {
         Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(nameSearch);
 
         combinedTask.addOnSuccessListener(querySnapshots -> {
@@ -172,7 +156,7 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    public void searchAddress(Task<QuerySnapshot> addressSearch){
+    public void searchAddress(Task<QuerySnapshot> addressSearch) {
         Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(addressSearch);
 
         combinedTask.addOnSuccessListener(querySnapshots -> {

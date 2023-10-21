@@ -13,8 +13,10 @@ import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +35,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Array;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -210,7 +215,6 @@ public class CreateEventActivity extends AppCompatActivity {
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter();
         viewPager.setAdapter(viewPagerAdapter);
 
-
         viewPagerAdapter.setImagePickerListener(new ViewPagerAdapter.ImagePickerListener() {
             @Override
             public void onPickImage(ImageView targetImageView, int requestCode) {
@@ -227,12 +231,41 @@ public class CreateEventActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK) {
             if (data != null) {
-                Uri imageUri = data.getData();
-                ImageView targetImageView = findViewById(R.id.create_imageView); // 根据你的需求获取ImageView的实例
-                targetImageView.setImageURI(imageUri);
-                //这里的imageUri是图片的Uri可以用来上传
-                upload_firebase(imageUri);
+                Uri originalUri = data.getData();
+                // 使用resizeAndCompressImage方法处理原始Uri
+                Uri compressedUri = resizeAndCompressImage(originalUri);
+                if (compressedUri != null) {
+                    ImageView targetImageView = findViewById(R.id.create_imageView);
+                    targetImageView.setImageURI(compressedUri);
+                    // 如果需要，您还可以使用压缩后的Uri进行上传
+                    upload_firebase(compressedUri);
+                } else {
+                    // 错误处理（例如，显示一个Toast消息）
+                    Toast.makeText(CreateEventActivity.this, "Error occurred while compressing images.", Toast.LENGTH_SHORT).show();
+                }
             }
+        }
+    }
+
+    private Uri resizeAndCompressImage(Uri originalUri) {
+        try {
+            // 1. 从URI中读取原始图片
+            Bitmap originalBitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), originalUri);
+            // 2. 使用Bitmap.createScaledBitmap方法缩放图片
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(originalBitmap, 300, 500, true);
+            // 3. 使用Bitmap.compress方法将缩放后的位图压缩并保存到文件或输出流中
+            // 创建一个新的输出文件
+            File outputDir = getCacheDir(); // context method
+            File outputFile = File.createTempFile("resized", ".jpg", outputDir);
+
+            try (FileOutputStream out = new FileOutputStream(outputFile)) {
+                resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out); // 压缩图片，90表示JPEG压缩率
+            }
+            // 返回新文件的Uri
+            return Uri.fromFile(outputFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null; // 如果出错，返回null或其他默认值
         }
     }
 
