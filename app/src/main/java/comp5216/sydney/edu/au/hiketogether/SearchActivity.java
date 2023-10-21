@@ -13,11 +13,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Set;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -46,7 +43,6 @@ public class SearchActivity extends AppCompatActivity {
 
     private ImageButton historyArrowButton;
     private boolean isHistoryVisible = true;
-
 
 
     @Override
@@ -110,15 +106,7 @@ public class SearchActivity extends AppCompatActivity {
 //            historyAdapter.notifyDataSetChanged();
 //            saveSearchHistory();
 //        }
-
-//        String query = searchEditText.getText().toString().trim();
-
         String query = searchEditText.getText().toString().trim();
-        String queryLowerCase = query.toLowerCase();
-        String queryUpperCase = query.toUpperCase();
-
-        // 在开始搜索前初始化集合
-        Set<String> processedDocumentIds = new HashSet<>();
 
         // 如果搜索内容不为空
         if (!query.isEmpty()) {
@@ -135,66 +123,63 @@ public class SearchActivity extends AppCompatActivity {
         // 使用Firebase Firestore来搜索匹配的事件
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-//        // 创建name和address的范围查询
-//        Query nameQuery = db.collection("Event List")
-//                .whereGreaterThanOrEqualTo("name", query)
-//                .whereLessThanOrEqualTo("name", query + "\uf8ff");
-//
-//        Query addressQuery = db.collection("Event List")
-//                .whereGreaterThanOrEqualTo("address", query)
-//                .whereLessThanOrEqualTo("address", query + "\uf8ff");
+        // 创建name和address的范围查询
+        Query nameQuery = db.collection("Event List")
+                .whereGreaterThanOrEqualTo("name", query)
+                .whereLessThanOrEqualTo("name", query + "\uf8ff");
 
-        // 使用name和address的范围查询（小写）
-        Query nameQueryLowerCase = db.collection("Event List")
-                .whereGreaterThanOrEqualTo("name", queryLowerCase)
-                .whereLessThanOrEqualTo("name", queryLowerCase + "\uf8ff");
+        Query addressQuery = db.collection("Event List")
+                .whereGreaterThanOrEqualTo("address", query)
+                .whereLessThanOrEqualTo("address", query + "\uf8ff");
 
-        Query addressQueryLowerCase = db.collection("Event List")
-                .whereGreaterThanOrEqualTo("address", queryLowerCase)
-                .whereLessThanOrEqualTo("address", queryLowerCase + "\uf8ff");
+        // 使用Task的组合功能来合并这两个查询的结果
+        Task<QuerySnapshot> nameSearch = nameQuery.get();
+        Task<QuerySnapshot> addressSearch = addressQuery.get();
 
-        // 使用name和address的范围查询（大写）
-        Query nameQueryUpperCase = db.collection("Event List")
-                .whereGreaterThanOrEqualTo("name", queryUpperCase)
-                .whereLessThanOrEqualTo("name", queryUpperCase + "\uf8ff");
+        if (nameSearch != null){
+            searchName(nameSearch);
+        }else{
+            searchAddress(addressSearch);
+        }
 
-        Query addressQueryUpperCase = db.collection("Event List")
-                .whereGreaterThanOrEqualTo("address", queryUpperCase)
-                .whereLessThanOrEqualTo("address", queryUpperCase + "\uf8ff");
 
-//        // 使用Task的组合功能来合并这两个查询的结果
-//        Task<QuerySnapshot> nameSearch = nameQuery.get();
-//        Task<QuerySnapshot> addressSearch = addressQuery.get();
-//
-//        Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(nameSearch, addressSearch);
-
-        // 使用Task的组合功能来合并这四个查询的结果
-        Task<QuerySnapshot> nameSearchLowerCase = nameQueryLowerCase.get();
-        Task<QuerySnapshot> addressSearchLowerCase = addressQueryLowerCase.get();
-        Task<QuerySnapshot> nameSearchUpperCase = nameQueryUpperCase.get();
-        Task<QuerySnapshot> addressSearchUpperCase = addressQueryUpperCase.get();
-
-        Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(nameSearchLowerCase, addressSearchLowerCase, nameSearchUpperCase, addressSearchUpperCase);
-
-//        combinedTask.addOnSuccessListener(querySnapshots -> {
-//            ArrayList<Event> matchedEvents = new ArrayList<>();
-//            for (QuerySnapshot snapshot : querySnapshots) {
-//                for (QueryDocumentSnapshot document : snapshot) {
-//                    Event event = document.toObject(Event.class); // 将文档转换为Event对象
-//                    if (!matchedEvents.contains(event)) {
-//                        matchedEvents.add(event);
-//                    }
-//                }
-//            }
+    }
+    public void searchName(Task<QuerySnapshot> nameSearch){
+        Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(nameSearch);
 
         combinedTask.addOnSuccessListener(querySnapshots -> {
             ArrayList<Event> matchedEvents = new ArrayList<>();
             for (QuerySnapshot snapshot : querySnapshots) {
                 for (QueryDocumentSnapshot document : snapshot) {
-                    if (!processedDocumentIds.contains(document.getId())) {
-                        Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                    Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                    if (!matchedEvents.contains(event)) {
                         matchedEvents.add(event);
-                        processedDocumentIds.add(document.getId());
+                    }
+                }
+            }
+
+            Intent intent = new Intent(this, EventPageActivity.class);
+            if (matchedEvents.isEmpty()) {
+                intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");
+            } else {
+                intent.putExtra("MATCHED_EVENTS", matchedEvents);
+            }
+            startActivity(intent);
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Error occurred while searching.", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    public void searchAddress(Task<QuerySnapshot> addressSearch){
+        Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(addressSearch);
+
+        combinedTask.addOnSuccessListener(querySnapshots -> {
+            ArrayList<Event> matchedEvents = new ArrayList<>();
+            for (QuerySnapshot snapshot : querySnapshots) {
+                for (QueryDocumentSnapshot document : snapshot) {
+                    Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                    if (!matchedEvents.contains(event)) {
+                        matchedEvents.add(event);
                     }
                 }
             }
