@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import com.squareup.picasso.Picasso;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 
@@ -79,6 +82,7 @@ public class EventDetailActivity extends AppCompatActivity {
         creatorEmail = findViewById(R.id.creatorEmail);
         creatorPhone = findViewById(R.id.creatorPhone);
         //eventImageView = findViewById(R.id.eventImage);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
 
         Button joinButton = findViewById(R.id.joinButton);
         Button quitButton = findViewById(R.id.quitButton);
@@ -115,6 +119,57 @@ public class EventDetailActivity extends AppCompatActivity {
                 // 这里您可以为每个tab配置标题，但作为指示点，通常我们不设置任何文本
             }
         }).attach();
+
+        db.collection("Event List").document(eventId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            List<String> memberIds = (List<String>) documentSnapshot.get("members");
+                            List<String> memberNames = new ArrayList<>();
+
+                            if (memberIds != null) {
+                                for (String memberId : memberIds) {
+                                    db.collection("User Profile").document(memberId)
+                                            .get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot userDocument) {
+                                                    if (userDocument.exists()) {
+                                                        String userName = userDocument.getString("name");
+                                                        memberNames.add(userName);
+
+                                                        // 检查是否获取了所有成员的信息
+                                                        if (memberNames.size() == memberIds.size()) {
+                                                            // 所有成员信息已获取，更新适配器
+                                                            updateRecyclerView(recyclerView,memberNames);
+                                                        }
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    // 处理获取用户文档失败的情况
+                                                    Log.e("Query", "Error getting user document: " + e.getMessage());
+                                                }
+                                            });
+                                }
+                            }
+                        } else {
+                            // 处理事件文档不存在的情况
+                            Log.d("Document", "Event document does not exist");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // 处理获取事件文档失败的情况
+                        Log.e("Query", "Error getting event document: " + e.getMessage());
+                    }
+                });
 
         // get creator info (name, email, phone) by UID
         String userID = event.getCreatorID();
@@ -381,5 +436,10 @@ public class EventDetailActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         // 3. 返回格式化后的字符串
         return sdf.format(date);
+    }
+    private void updateRecyclerView(RecyclerView recyclerView, List<String> memberNames) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        MemberAdapter memberAdapter = new MemberAdapter(memberNames);
+        recyclerView.setAdapter(memberAdapter);
     }
 }
