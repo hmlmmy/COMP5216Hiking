@@ -108,7 +108,6 @@ public class SearchActivity extends AppCompatActivity {
                             matchedEvents.add(event);
                         }
 
-
                         Intent intent = new Intent(this, EventPageActivity.class);
                         if (matchedEvents.isEmpty()) {
                             intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");

@@ -40,8 +40,11 @@
         android:id="@+id/userdetailsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="232dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="144dp"
+        android:layout_marginEnd="8dp"
         android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -51,7 +54,7 @@
             android:id="@+id/userdetailsLayoutTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="UserDetails"
+            android:text="My Details"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -93,9 +96,11 @@
         android:id="@+id/headlineLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="368dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="280dp"
+        android:layout_marginEnd="8dp"
         android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -104,7 +109,7 @@
             android:id="@+id/headlineTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Headline"
+            android:text="My Events"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -120,49 +125,14 @@
             android:id="@+id/bookedEventButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Booked Event" />
+            android:text="Booked Events" />
 
         <!-- Create Event 跳转按钮 -->
         <Button
             android:id="@+id/MyEventButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="My Events" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/preferenceLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="13dp"
-        android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headlineLayout">
-
-        <!-- Preference 标题 -->
-
-        <TextView
-            android:id="@+id/preferenceTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Preference"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/darkModeButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="32dp"
-            android:text="Dark Mode"
-            tools:ignore="MissingConstraints" />
-
-        <!-- Language 跳转按钮 -->
-
-        <!-- Dark Mode 跳转按钮 -->
-
+            android:text="Created by me" />
     </LinearLayout>
 
     <Button
@@ -170,10 +140,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="5dp"
         android:text="logout"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -181,7 +153,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="160dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="16dp"
         android:text="EDIT"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />

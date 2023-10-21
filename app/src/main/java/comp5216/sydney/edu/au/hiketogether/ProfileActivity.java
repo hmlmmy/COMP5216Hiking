@@ -28,7 +28,6 @@ public class ProfileActivity extends AppCompatActivity {
     FirebaseUser user;
     Button logoutBtn;
     Button editBtn;
-    Button darkmodeBtn;
     Button createEventBtn;
     Button bookedEventBtn;
     Button myEventBtn;
@@ -51,22 +50,48 @@ public class ProfileActivity extends AppCompatActivity {
         editBtn = findViewById(R.id.editProfile);
         userEmail = findViewById(R.id.emailtextView);
         PhoneNum = findViewById(R.id.phonetextView);
-        darkmodeBtn = findViewById(R.id.darkModeButton);
         createEventBtn = findViewById(R.id.CreateEventButton);
         bookedEventBtn = findViewById(R.id.bookedEventButton);
         myEventBtn = findViewById(R.id.MyEventButton);
-
-
 
         if (user == null) {
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent);
             finish();
-        } else {
-            Username.setText(user.getEmail());
-            userEmail.setText(user.getEmail());
-            PhoneNum.setText(user.getPhoneNumber());
         }
+
+        // get creator info (name, email, phone) by UID
+        String userID = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("User Profile").document(userID)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot document) {
+                        if (document.exists()) {
+                            // 从文档中获取事件信息
+                            String username = document.getString("name");
+                            String email = document.getString("email");
+                            String phone = document.getString("phone");
+                            // set creator info
+                            Username.setText(username);
+                            userEmail.setText(email);
+                            PhoneNum.setText(phone);
+                        } else {
+                            // 没有匹配的文档，处理错误
+                            // 这里可以显示错误消息或执行其他操作
+                            Log.i("search error", "No matching document for userID: " + userID);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // 查询失败，处理错误
+                        // 这里可以显示错误消息或执行其他操作
+                        Log.e("search error", "Query failed: " + e.getMessage());
+                    }
+                });
 
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -157,16 +182,6 @@ public class ProfileActivity extends AppCompatActivity {
                         });
             }
         });
-        darkmodeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 修改整个页面的背景颜色
-                View rootView = getWindow().getDecorView().getRootView();
-                rootView.setBackgroundColor(getResources().getColor(R.color.darkmode_color));
-
-            }
-        });
-
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
