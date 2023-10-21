@@ -138,6 +138,43 @@ public class SearchActivity extends AppCompatActivity {
 
         Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(nameSearch, addressSearch);
 
+        if (nameSearch != null){
+            searchName(nameSearch);
+        }else{
+            searchAddress(addressSearch);
+        }
+    }
+
+    public void searchName(Task<QuerySnapshot> nameSearch){
+        Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(nameSearch);
+
+        combinedTask.addOnSuccessListener(querySnapshots -> {
+            ArrayList<Event> matchedEvents = new ArrayList<>();
+            for (QuerySnapshot snapshot : querySnapshots) {
+                for (QueryDocumentSnapshot document : snapshot) {
+                    Event event = document.toObject(Event.class); // 将文档转换为Event对象
+                    event.setId(document.getId());
+                    if (!matchedEvents.contains(event)) {
+                        matchedEvents.add(event);
+                    }
+                }
+            }
+
+            Intent intent = new Intent(this, EventPageActivity.class);
+            if (matchedEvents.isEmpty()) {
+                intent.putExtra("ERROR_MESSAGE", "Cannot find appropriate event.");
+            } else {
+                intent.putExtra("MATCHED_EVENTS", matchedEvents);
+            }
+            startActivity(intent);
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "Error occurred while searching.", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    public void searchAddress(Task<QuerySnapshot> addressSearch){
+        Task<List<QuerySnapshot>> combinedTask = Tasks.whenAllSuccess(addressSearch);
+
         combinedTask.addOnSuccessListener(querySnapshots -> {
             ArrayList<Event> matchedEvents = new ArrayList<>();
             for (QuerySnapshot snapshot : querySnapshots) {
