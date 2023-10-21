@@ -59,6 +59,9 @@ public class EventDetailActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+        assert user != null;
+        String currentUID = user.getUid();
+        Log.i("currentUID", currentUID);
 
         //Get user email
         userEmail = user.getEmail();
@@ -145,23 +148,20 @@ public class EventDetailActivity extends AppCompatActivity {
                     }
                 });
 
+
         // 设置按钮的点击事件监听器
         joinButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 创建对用户文档的引用，使用 whereEqualTo 查询邮箱地址
-                db.collection("User Profile")
-                        .whereEqualTo("email", userEmail) // userEmail 是当前用户的邮箱地址
+                db.collection("User Profile").document(currentUID)
                         .get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                if (!queryDocumentSnapshots.isEmpty()) {
-                                    // 获取匹配邮箱的用户文档
-                                    DocumentSnapshot userDocument = queryDocumentSnapshots.getDocuments().get(0);
-
+                            public void onSuccess(DocumentSnapshot document) {
+                                if (document.exists()) {
                                     // 获取用户的 joinedEvents 数组
-                                    List<String> joinedEvents = (List<String>) userDocument.get("joinedEvents");
+                                    List<String> joinedEvents = (List<String>) document.get("joinedEvents");
 
                                     if (joinedEvents == null) {
                                         joinedEvents = new ArrayList<>();
@@ -173,7 +173,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                         joinedEvents.add(eventId);
 
                                         // 更新用户文档
-                                        userDocument.getReference().update("joinedEvents", joinedEvents)
+                                        document.getReference().update("joinedEvents", joinedEvents)
                                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
@@ -214,18 +214,14 @@ public class EventDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // 创建对用户文档的引用，使用 whereEqualTo 查询邮箱地址
-                db.collection("User Profile")
-                        .whereEqualTo("email", userEmail) // userEmail 是当前用户的邮箱地址
+                db.collection("User Profile").document(currentUID)
                         .get()
-                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                             @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                if (!queryDocumentSnapshots.isEmpty()) {
-                                    // 获取匹配邮箱的用户文档
-                                    DocumentSnapshot userDocument = queryDocumentSnapshots.getDocuments().get(0);
-
+                            public void onSuccess(DocumentSnapshot document) {
+                                if (document.exists()) {
                                     // 获取用户的 joinedEvents 数组
-                                    List<String> joinedEvents = (List<String>) userDocument.get("joinedEvents");
+                                    List<String> joinedEvents = (List<String>) document.get("joinedEvents");
 
                                     if (joinedEvents != null) {
                                         // 检查用户是否已经预定了这个事件
@@ -234,7 +230,7 @@ public class EventDetailActivity extends AppCompatActivity {
                                             joinedEvents.remove(eventId);
 
                                             // 更新用户文档
-                                            userDocument.getReference().update("joinedEvents", joinedEvents)
+                                            document.getReference().update("joinedEvents", joinedEvents)
                                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
